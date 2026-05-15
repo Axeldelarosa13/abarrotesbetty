@@ -340,7 +340,7 @@
                 <span id="titulo-modal-prod"><i class="fa-solid fa-pen mr-2"></i> Editar Producto</span>
                 <button onclick="cerrarModalProducto()" class="hover:bg-emerald-700 p-1.5 rounded-lg transition-colors"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <div class="p-6 flex flex-col gap-5">
+            <div class="p-6 flex flex-col gap-4">
                 <div class="grid grid-cols-2 gap-4">
                     <div class="col-span-2">
                         <label class="block text-xs font-bold text-slate-500 mb-1.5 uppercase">Código de Barras</label>
@@ -350,6 +350,16 @@
                         <label class="block text-xs font-bold text-slate-500 mb-1.5 uppercase">Descripción Completa</label>
                         <input type="text" id="nuevo-prod-desc" class="w-full border-2 border-slate-200 rounded-lg px-4 py-2.5 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all">
                     </div>
+                    
+                    <!-- UNIDAD DE MEDIDA / GRANEL -->
+                    <div class="col-span-2">
+                        <label class="block text-[10px] md:text-xs font-bold text-slate-500 mb-1.5 uppercase">¿Cómo se vende este producto?</label>
+                        <select id="nuevo-prod-unidad" class="w-full border-2 border-slate-200 rounded-lg px-4 py-2.5 font-bold text-slate-700 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all bg-white cursor-pointer shadow-sm">
+                            <option value="pieza">Por Pieza o Paquete cerrado (Ej. Coca Cola, Sabritas)</option>
+                            <option value="granel">A Granel / Por Peso (Ej. Jamón, Queso, Croquetas)</option>
+                        </select>
+                    </div>
+
                     <div class="col-span-2">
                         <label class="block text-xs font-bold text-slate-500 mb-1.5 uppercase">Departamento / Categoría</label>
                         <input type="text" id="nuevo-prod-depto" class="w-full border-2 border-slate-200 rounded-lg px-4 py-2.5 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all" placeholder="Ej. Abarrotes, Lácteos, Botanas...">
@@ -379,12 +389,8 @@
                         <label class="block text-xs font-bold text-slate-500 mb-1.5 uppercase">Alerta Stock Mínimo</label>
                         <input type="number" id="nuevo-prod-min" class="w-full border-2 border-slate-200 rounded-lg px-4 py-2.5 font-mono focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all">
                     </div>
-                    <div class="col-span-2 flex items-center gap-2 mt-2">
-                        <input type="checkbox" id="nuevo-prod-granel" class="w-5 h-5 accent-emerald-500 cursor-pointer">
-                        <label for="nuevo-prod-granel" class="font-bold text-slate-600 cursor-pointer">Este producto se vende a Granel / Pesado</label>
-                    </div>
                 </div>
-                <button onclick="guardarProducto()" class="mt-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-3.5 rounded-xl font-black text-lg shadow-md transition-all active:scale-95"><i class="fa-solid fa-floppy-disk mr-2"></i> Guardar Producto</button>
+                <button onclick="guardarProducto()" class="mt-4 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-3.5 rounded-xl font-black text-lg shadow-md transition-all active:scale-95"><i class="fa-solid fa-floppy-disk mr-2"></i> Guardar Producto</button>
             </div>
         </div>
     </div>
@@ -1165,7 +1171,6 @@
             
             const divCambio = document.getElementById('modal-cambio-multi');
             
-            // Regla: No se puede dar cambio de lo que se paga con tarjeta/transf (sólo del efectivo recibido)
             if(cambio > efe && (tar + tra) > total) {
                 divCambio.innerText = "Error (Excede Tarjeta)";
                 divCambio.className = "text-lg font-black font-mono text-red-500";
@@ -1346,8 +1351,6 @@
                     `;
                 }).join('');
 
-                // Calcula efectivo sumando ventas "efectivo" + entradas - salidas
-                // Si hay multipago, extrae la porción en efectivo (Regex)
                 let ventasEfectivoTotal = 0;
                 DB.ventas.forEach(v => {
                     if(v.metodo === 'efectivo') ventasEfectivoTotal += v.total;
@@ -1404,14 +1407,14 @@
             AppState.modalAbierto = false;
         }
 
-        // --- PRODUCTOS ---
+        // --- PRODUCTOS Y GRANEL ---
         function renderProductos() {
             const tbody = document.getElementById('productos-tbody');
             if(!tbody) return;
             tbody.innerHTML = DB.productos.map(p => `
                 <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors bg-white">
                     <td class="p-3 font-mono text-slate-500 font-semibold">${p.id}</td>
-                    <td class="p-3 font-bold text-slate-800">${p.desc} ${p.granel ? '<span class="text-[10px] bg-amber-100 text-amber-700 px-1 rounded ml-1 uppercase">Granel</span>' : ''}</td>
+                    <td class="p-3 font-bold text-slate-800">${p.desc} ${p.granel ? '<span class="text-[10px] bg-amber-100 text-amber-700 px-1 rounded ml-1 uppercase">⚖️ Peso</span>' : ''}</td>
                     <td class="p-3 text-slate-500"><span class="bg-slate-100 px-2 py-1 rounded text-xs border border-slate-200">${p.departamento || 'General'}</span></td>
                     <td class="p-3 text-right font-mono text-slate-500">$${(p.costo || 0).toFixed(2)}</td>
                     <td class="p-3 text-right font-mono font-bold text-blue-600">$${(p.precio || 0).toFixed(2)}</td>
@@ -1435,8 +1438,7 @@
             document.getElementById('nuevo-prod-precio').value = '';
             document.getElementById('nuevo-prod-stock').value = '';
             document.getElementById('nuevo-prod-min').value = '';
-            const inpGranel = document.getElementById('nuevo-prod-granel');
-            if(inpGranel) inpGranel.checked = false;
+            document.getElementById('nuevo-prod-unidad').value = 'pieza';
             
             document.getElementById('modal-producto').classList.replace('hidden', 'flex'); 
             AppState.modalAbierto = true;
@@ -1458,16 +1460,15 @@
             document.getElementById('titulo-modal-prod').innerHTML = '<i class="fa-solid fa-pen mr-2"></i> Editar Producto';
             
             document.getElementById('nuevo-prod-codigo').value = p.id;
-            document.getElementById('nuevo-prod-codigo').disabled = false; // AHORA SE PUEDE EDITAR
+            document.getElementById('nuevo-prod-codigo').disabled = false; 
             document.getElementById('nuevo-prod-desc').value = p.desc;
             document.getElementById('nuevo-prod-depto').value = p.departamento || '';
             document.getElementById('nuevo-prod-costo').value = p.costo || 0;
-            document.getElementById('nuevo-prod-margen').value = ''; // Margen en blanco al editar, opcional
+            document.getElementById('nuevo-prod-margen').value = ''; 
             document.getElementById('nuevo-prod-precio').value = p.precio || 0;
             document.getElementById('nuevo-prod-stock').value = p.stock || 0;
             document.getElementById('nuevo-prod-min').value = p.minStock || 0;
-            const inpGranel = document.getElementById('nuevo-prod-granel');
-            if(inpGranel) inpGranel.checked = !!p.granel;
+            document.getElementById('nuevo-prod-unidad').value = p.granel ? 'granel' : 'pieza';
             
             document.getElementById('modal-producto').classList.replace('hidden', 'flex');
             AppState.modalAbierto = true;
@@ -1483,7 +1484,6 @@
             const id = document.getElementById('nuevo-prod-codigo').value.trim();
             if(!id) return alert("Falta el código");
 
-            // Si es edición, revisar que no asigne un código de barras que ya tenga OTRO producto
             if (productoEditandoId && productoEditandoId !== id) {
                 if (DB.productos.some(p => p.id === id)) {
                     return alert("El nuevo código de barras ya pertenece a otro producto existente.");
@@ -1493,7 +1493,7 @@
             }
 
             const depto = document.getElementById('nuevo-prod-depto').value.trim() || 'General';
-            const inpGranel = document.getElementById('nuevo-prod-granel');
+            const isGranel = document.getElementById('nuevo-prod-unidad').value === 'granel';
             
             const datos = {
                 id: id, 
@@ -1503,7 +1503,7 @@
                 precio: parseFloat(document.getElementById('nuevo-prod-precio').value) || 0,
                 stock: parseFloat(document.getElementById('nuevo-prod-stock').value) || 0,
                 minStock: parseFloat(document.getElementById('nuevo-prod-min').value) || 0,
-                granel: inpGranel ? inpGranel.checked : false
+                granel: isGranel
             };
 
             if (productoEditandoId) {
@@ -1533,26 +1533,79 @@
             const file = e.target.files[0]; if(!file) return;
             const reader = new FileReader();
             reader.onload = function(evt) {
-                const rows = evt.target.result.split('\n'); let importados = 0;
-                for(let i=1; i<rows.length; i++){
-                    const c = rows[i].split(',');
-                    if(c.length >= 4 && c[0].trim()){
-                        const id = c[0].trim();
+                const rows = evt.target.result.split('\n'); 
+                if(rows.length < 2) return;
+                
+                const parseRow = (str) => {
+                    const arr = []; let quote = false; let val = '';
+                    for (let i = 0; i < str.length; i++) {
+                        let char = str[i];
+                        if (char === '"') quote = !quote;
+                        else if (char === ',' && !quote) { arr.push(val.trim()); val = ''; }
+                        else val += char;
+                    }
+                    arr.push(val.trim()); return arr;
+                };
+
+                const headers = parseRow(rows[0].toLowerCase());
+                const isHeader = headers.some(h => h.includes('codigo') || h.includes('desc'));
+                
+                let iCosto = 2, iPrecio = 3, iDepto = 4, iStock = 5, iMin = 6;
+                
+                if (isHeader) {
+                    iCosto = headers.findIndex(h => h.includes('costo'));
+                    iPrecio = headers.findIndex(h => h === 'precio_venta' || h === 'precio' || h.includes('venta'));
+                    iDepto = headers.findIndex(h => h.includes('departamento') || h.includes('categoria'));
+                    iStock = headers.findIndex(h => h === 'inventario' || h === 'stock');
+                    iMin = headers.findIndex(h => h.includes('min'));
+                }
+
+                let importados = 0;
+                let startIdx = isHeader ? 1 : 0; 
+                const keywordsGranel = ['jamon', 'jamón', 'queso', 'chorizo', 'longaniza', 'tocino', 'carne', 'salchicha', 'frijol', 'huevo'];
+
+                for(let i=startIdx; i<rows.length; i++){
+                    if(!rows[i].trim()) continue;
+                    const c = parseRow(rows[i]);
+                    
+                    if(c.length >= 2 && c[0]){
+                        const id = c[0];
                         const index = DB.productos.findIndex(p => p.id === id);
+                        
+                        const costo = iCosto > -1 && c[iCosto] ? parseFloat(c[iCosto]) : 0;
+                        const precio = iPrecio > -1 && c[iPrecio] ? parseFloat(c[iPrecio]) : 0;
+                        let departamento = iDepto > -1 && c[iDepto] ? c[iDepto] : 'General';
+                        
+                        if (departamento === '0.0' || departamento === '0' || !departamento) {
+                            departamento = 'General';
+                        }
+
+                        const stock = iStock > -1 && c[iStock] ? parseFloat(c[iStock]) : 0;
+                        const minStock = iMin > -1 && c[iMin] ? parseFloat(c[iMin]) : 0;
+
+                        // DETECCIÓN INTELIGENTE DE GRANEL
+                        const desc = c[1] || '';
+                        const descLower = desc.toLowerCase();
+                        const esGranelDetectado = keywordsGranel.some(kw => descLower.includes(kw));
+
                         const nuevoProd = {
-                            id: id, desc: c[1] ? c[1].trim() : '', 
-                            costo: parseFloat(c[2]) || 0, precio: parseFloat(c[3]) || 0, 
-                            departamento: c[4] ? c[4].trim() : 'General',
-                            stock: parseFloat(c[5]) || 0, minStock: parseFloat(c[6]) || 0,
-                            granel: false
+                            id: id, 
+                            desc: desc, 
+                            costo: costo || 0, 
+                            precio: precio || 0, 
+                            departamento: departamento,
+                            stock: stock || 0, 
+                            minStock: minStock || 0,
+                            granel: esGranelDetectado
                         };
+                        
                         if(index >= 0) { DB.productos[index] = nuevoProd; } 
                         else { DB.productos.push(nuevoProd); }
                         importados++;
                     }
                 }
                 guardarDB(); renderProductos(); renderProductosFrecuentes(); e.target.value='';
-                alert(`Importados/Actualizados ${importados} productos desde el Excel.`);
+                alert(`Importados/Actualizados ${importados} productos.\nSe activó automáticamente la báscula para quesos, jamones, etc.`);
             };
             reader.readAsText(file);
         }
@@ -1570,17 +1623,15 @@
                 </tr>`).join('');
         }
 
-        // Buscador directo en la tabla de F3 (Sin ventana emergente)
         function filtrarTablaProductosF3() {
             const q = document.getElementById('buscador-productos-f3').value.toLowerCase();
             const rows = document.querySelectorAll('#productos-tbody tr');
             rows.forEach(row => {
-                const tdText = row.innerText.toLowerCase();
+                const tdText = row.textContent.toLowerCase();
                 row.style.display = tdText.includes(q) ? '' : 'none';
             });
         }
 
-        // Buscador Global de Ventas (F10)
         function abrirModalBuscar() { 
             AppState.modalAbierto = true; 
             document.getElementById('modal-buscar').classList.replace('hidden', 'flex'); 
@@ -1599,9 +1650,16 @@
             document.getElementById('tbody-buscar-resultados').innerHTML = res.slice(0,10).map(p => `
                 <tr onclick="procesarCodigoBarras('${p.id}'); cerrarModalBuscar();" class="hover:bg-blue-50 cursor-pointer transition-colors bg-white">
                     <td class="p-3 font-mono text-blue-500 font-bold">${p.id}</td>
-                    <td class="p-3 font-bold text-slate-700">${p.desc} <span class="text-xs text-slate-400 font-normal ml-2">${p.departamento||''}</span></td>
+                    <td class="p-3 font-bold text-slate-700">${p.desc} ${p.granel ? '<span class="bg-amber-100 text-amber-700 px-1 rounded ml-1 text-[10px] uppercase">⚖️ Peso</span>' : ''}</td>
                     <td class="p-3 text-right font-mono font-black text-blue-700">$${(p.precio||0).toFixed(2)}</td>
                 </tr>`).join('');
+        }
+
+        function handleBuscarKey(e) { 
+            if(e.key === 'Enter') { 
+                const first = document.querySelector('#tbody-buscar-resultados tr'); 
+                if(first) first.click(); 
+            } 
         }
 
         // --- CLIENTES Y ABONOS ---

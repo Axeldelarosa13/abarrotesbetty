@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Abarrotes "Betty" - Punto de Venta Pro</title>
+    <title>Abarrotes "Betty" - Punto de Venta</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -1195,12 +1195,14 @@
             const total = getTotales();
             let pagaCon = total; 
             let metodoFinal = AppState.metodoPagoActivo;
+            let cambio = 0;
 
             if (AppState.metodoPagoActivo === 'efectivo') {
                 pagaCon = parseFloat(document.getElementById('inputPagaCon').value) || 0;
                 if (pagaCon < total) {
                     return alert("El monto ingresado en efectivo es menor al total a cobrar.");
                 }
+                cambio = pagaCon - total;
             } else if (AppState.metodoPagoActivo === 'multipago') {
                 const efe = parseFloat(document.getElementById('multi-efe').value) || 0;
                 const tar = parseFloat(document.getElementById('multi-tar').value) || 0;
@@ -1215,6 +1217,9 @@
                 if(tar>0) desgloses.push(`Tar: $${tar}`);
                 if(tra>0) desgloses.push(`Tra: $${tra}`);
                 metodoFinal = `Multi (${desgloses.join(', ')})`;
+                
+                pagaCon = totalPagado;
+                cambio = totalPagado - total;
             }
 
             let clienteSeleccionado = null;
@@ -1255,6 +1260,8 @@
                 fecha: new Date().toISOString(),
                 total: total,
                 metodo: metodoFinal,
+                recibido: pagaCon,
+                cambio: cambio,
                 articulos: carritoActual
             };
             DB.ventas.push(nuevaVenta);
@@ -1392,10 +1399,24 @@
                     <td class="text-right font-mono font-bold">$${(item.precio * item.cantidad).toFixed(2)}</td>
                 </tr>`;
             });
+            
+            const recibido = v.recibido !== undefined ? v.recibido : v.total;
+            const cambio = v.cambio !== undefined ? v.cambio : 0;
+
             html += `</tbody></table>
-                <div class="mt-4 text-right">
-                    <span class="text-slate-500 uppercase tracking-widest text-xs font-bold mr-3">Gran Total</span>
-                    <span class="text-3xl font-black text-blue-600 font-mono">$${v.total.toFixed(2)}</span>
+                <div class="mt-4 flex flex-col items-end gap-2 border-t border-slate-200 pt-4">
+                    <div class="text-right w-full md:w-2/3 flex justify-between items-center">
+                        <span class="text-slate-500 uppercase tracking-widest text-xs font-bold">Gran Total</span>
+                        <span class="text-2xl font-black text-blue-600 font-mono">$${v.total.toFixed(2)}</span>
+                    </div>
+                    <div class="text-right w-full md:w-2/3 flex justify-between items-center text-sm text-slate-600">
+                        <span class="font-bold">Pago Recibido:</span>
+                        <span class="font-mono">$${recibido.toFixed(2)}</span>
+                    </div>
+                    <div class="text-right w-full md:w-2/3 flex justify-between items-center text-sm text-slate-800 bg-green-100 px-3 py-1.5 rounded-lg border border-green-200">
+                        <span class="font-bold text-green-800">Cambio Devuelto:</span>
+                        <span class="font-mono text-green-800 font-black text-lg">$${cambio.toFixed(2)}</span>
+                    </div>
                 </div>`;
             
             document.getElementById('contenedor-detalle-venta').innerHTML = html;
@@ -1861,7 +1882,36 @@
             const c = DB.clientes.find(x => x.id === id);
             if(!c || !c.telefono) return alert("El cliente no tiene teléfono registrado.");
             
-            let msg = `👋 Hola ${c.nombre},\nTe contactamos de *Abarrotes Betty* para recordarte amablemente que tu cuenta presenta un saldo pendiente de *$${c.deuda.toFixed(2)}*.\n\n`;
+            let msg = `👋 Hola ${c.nombre},\nTe contactamos de *Abarrotes Betty* para enviarte tu estado de cuenta. Tu saldo pendiente actual es de *$${c.deuda.toFixed(2)}*.\n\n`;
+            
+            if (c.historial && c.historial.length > 0) {
+                const compras = c.historial.filter(h => h.tipo === 'compra');
+                const abonos = c.historial.filter(h => h.tipo === 'abono');
+
+                if (compras.length > 0) {
+                    msg += `*🧾 DETALLE DE COMPRAS FIADAS:*\n`;
+                    compras.forEach(compra => {
+                        const f = new Date(compra.fecha);
+                        msg += `🗓️ ${f.toLocaleDateString('es-MX')} (Ticket #${compra.ticket})\n`;
+                        if (compra.articulos) {
+                            compra.articulos.forEach(art => {
+                                msg += `  ▫️ ${art.cantidad}x ${art.desc} = $${(art.precio * art.cantidad).toFixed(2)}\n`;
+                            });
+                        }
+                        msg += `  *Total de compra: $${compra.total.toFixed(2)}*\n\n`;
+                    });
+                }
+
+                if (abonos.length > 0) {
+                    msg += `*💰 TUS ABONOS REGISTRADOS:*\n`;
+                    abonos.forEach(abono => {
+                        const f = new Date(abono.fecha);
+                        msg += `✔️ ${f.toLocaleDateString('es-MX')} - Abonaste: $${abono.total.toFixed(2)}\n`;
+                    });
+                    msg += `\n`;
+                }
+            }
+
             msg += `Por favor pasa a liquidar tu cuenta cuando te sea posible. ¡Agradecemos tu preferencia!`;
             
             const num = limpiarTelefono(c.telefono);

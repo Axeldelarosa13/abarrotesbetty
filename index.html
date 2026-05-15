@@ -200,60 +200,60 @@
     </main>
 
 
-    <div id="modal-producto" class="fixed inset-0 bg-slate-900/60 items-center justify-center z-50 backdrop-blur-sm hidden">
-        <div class="bg-white rounded-2xl shadow-2xl w-[600px] flex flex-col overflow-hidden animate-in zoom-in-95 duration-200 border border-slate-200">
-            <div class="bg-emerald-600 text-white px-6 py-4 font-black text-lg flex justify-between items-center">
+    <div id="modal-producto" class="fixed inset-0 bg-slate-900/60 items-center justify-center z-50 backdrop-blur-sm hidden p-2 sm:p-0">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-[600px] flex flex-col overflow-hidden animate-in zoom-in-95 duration-200 border border-slate-200 max-h-[95vh]">
+            <div class="bg-emerald-600 text-white px-4 md:px-6 py-3 md:py-4 font-black text-base md:text-lg flex justify-between items-center shrink-0">
                 <span id="titulo-modal-prod"><i class="fa-solid fa-pen mr-2"></i> Editar Producto</span>
                 <button onclick="cerrarModalProducto()" class="hover:bg-emerald-700 p-1.5 rounded-lg transition-colors"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <div class="p-6 flex flex-col gap-5">
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="col-span-2">
-                        <label class="block text-xs font-bold text-slate-500 mb-1.5 uppercase">Código de Barras</label>
-                        <input type="text" id="nuevo-prod-codigo" class="w-full border-2 border-slate-200 rounded-lg px-4 py-2.5 font-mono text-lg focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all disabled:bg-slate-100 disabled:text-slate-500">
+            <div class="p-4 md:p-6 flex flex-col gap-4 md:gap-5 overflow-y-auto">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+                    <div class="col-span-1 sm:col-span-2">
+                        <label class="block text-[10px] md:text-xs font-bold text-slate-500 mb-1 uppercase">Código de Barras</label>
+                        <input type="text" id="nuevo-prod-codigo" class="w-full border-2 border-slate-200 rounded-lg px-3 py-2 md:px-4 md:py-2.5 font-mono text-base md:text-lg focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all disabled:bg-slate-100 disabled:text-slate-500">
                     </div>
-                    <div class="col-span-2">
-                        <label class="block text-xs font-bold text-slate-500 mb-1.5 uppercase">Descripción Completa</label>
-                        <input type="text" id="nuevo-prod-desc" class="w-full border-2 border-slate-200 rounded-lg px-4 py-2.5 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all">
+                    <div class="col-span-1 sm:col-span-2">
+                        <label class="block text-[10px] md:text-xs font-bold text-slate-500 mb-1 uppercase">Descripción Completa</label>
+                        <input type="text" id="nuevo-prod-desc" class="w-full border-2 border-slate-200 rounded-lg px-3 py-2 md:px-4 md:py-2.5 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all">
                     </div>
-                    <div class="col-span-2">
-                        <label class="block text-xs font-bold text-slate-500 mb-1.5 uppercase">Departamento / Categoría</label>
-                        <input type="text" id="nuevo-prod-depto" class="w-full border-2 border-slate-200 rounded-lg px-4 py-2.5 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all" placeholder="Ej. Abarrotes, Lácteos, Botanas...">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-500 mb-1.5 uppercase">Costo de Compra ($)</label>
-                        <input type="number" id="nuevo-prod-costo" class="w-full border-2 border-slate-200 rounded-lg px-4 py-2.5 font-mono focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all">
+                    <div class="col-span-1 sm:col-span-2">
+                        <label class="block text-[10px] md:text-xs font-bold text-slate-500 mb-1 uppercase">Departamento / Categoría</label>
+                        <input type="text" id="nuevo-prod-depto" class="w-full border-2 border-slate-200 rounded-lg px-3 py-2 md:px-4 md:py-2.5 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all" placeholder="Ej. Abarrotes, Lácteos...">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-blue-600 mb-1.5 uppercase">Precio de Venta ($)</label>
-                        <input type="number" id="nuevo-prod-precio" class="w-full border-2 border-blue-300 rounded-lg px-4 py-2.5 font-mono font-bold text-blue-700 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all">
+                        <label class="block text-[10px] md:text-xs font-bold text-slate-500 mb-1 uppercase">Costo ($)</label>
+                        <input type="number" id="nuevo-prod-costo" class="w-full border-2 border-slate-200 rounded-lg px-3 py-2 md:px-4 md:py-2.5 font-mono focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-slate-500 mb-1.5 uppercase">Stock Físico Actual</label>
-                        <input type="number" id="nuevo-prod-stock" class="w-full border-2 border-slate-200 rounded-lg px-4 py-2.5 font-mono focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all">
+                        <label class="block text-[10px] md:text-xs font-bold text-blue-600 mb-1 uppercase">Precio Venta ($)</label>
+                        <input type="number" id="nuevo-prod-precio" class="w-full border-2 border-blue-300 rounded-lg px-3 py-2 md:px-4 md:py-2.5 font-mono font-bold text-blue-700 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-slate-500 mb-1.5 uppercase">Alerta Stock Mínimo</label>
-                        <input type="number" id="nuevo-prod-min" class="w-full border-2 border-slate-200 rounded-lg px-4 py-2.5 font-mono focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all">
+                        <label class="block text-[10px] md:text-xs font-bold text-slate-500 mb-1 uppercase">Stock Actual</label>
+                        <input type="number" id="nuevo-prod-stock" class="w-full border-2 border-slate-200 rounded-lg px-3 py-2 md:px-4 md:py-2.5 font-mono focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] md:text-xs font-bold text-slate-500 mb-1 uppercase">Alerta Stock Mín.</label>
+                        <input type="number" id="nuevo-prod-min" class="w-full border-2 border-slate-200 rounded-lg px-3 py-2 md:px-4 md:py-2.5 font-mono focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all">
                     </div>
                 </div>
-                <button onclick="guardarProducto()" class="mt-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-3.5 rounded-xl font-black text-lg shadow-md transition-all active:scale-95"><i class="fa-solid fa-floppy-disk mr-2"></i> Guardar Producto</button>
+                <button onclick="guardarProducto()" class="mt-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-3 md:py-3.5 rounded-xl font-black text-base md:text-lg shadow-md transition-all active:scale-95 shrink-0"><i class="fa-solid fa-floppy-disk mr-2"></i> Guardar</button>
             </div>
         </div>
     </div>
 
-    <div id="modal-buscar" class="fixed inset-0 bg-slate-900/60 items-start justify-center z-50 backdrop-blur-sm hidden pt-24">
-        <div class="bg-white rounded-2xl shadow-2xl w-[700px] flex flex-col overflow-hidden animate-in zoom-in-95 duration-200">
-            <div class="bg-blue-600 text-white px-6 py-3 font-bold flex justify-between items-center">
-                <span><i class="fa-solid fa-magnifying-glass mr-2"></i> Buscar Producto (F10)</span>
+    <div id="modal-buscar" class="fixed inset-0 bg-slate-900/60 items-start justify-center z-50 backdrop-blur-sm hidden pt-10 md:pt-24 p-2 sm:p-0">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-[700px] flex flex-col overflow-hidden animate-in zoom-in-95 duration-200 max-h-[85vh]">
+            <div class="bg-blue-600 text-white px-4 md:px-6 py-3 font-bold flex justify-between items-center shrink-0">
+                <span><i class="fa-solid fa-magnifying-glass mr-2"></i> Buscar (F10)</span>
                 <button onclick="cerrarModalBuscar()" class="hover:bg-blue-700 p-1 rounded-lg"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <div class="p-4 flex flex-col gap-2">
+            <div class="p-3 md:p-4 flex flex-col gap-2 overflow-hidden">
                 <input type="text" id="input-buscar-prod" onkeyup="filtrarBusquedaProd()" onkeydown="handleBuscarKey(event)"
-                    class="w-full border-2 border-blue-200 rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100 text-xl shadow-inner transition-all" 
-                    placeholder="Escribe el nombre o escanea..." autocomplete="off">
-                <div class="border border-slate-200 rounded-xl bg-slate-50 overflow-y-auto max-h-[400px] mt-2 shadow-inner">
-                    <table class="w-full text-left text-sm">
+                    class="w-full border-2 border-blue-200 rounded-xl px-3 py-2.5 md:px-4 md:py-3 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100 text-base md:text-xl shadow-inner transition-all shrink-0" 
+                    placeholder="Nombre o código..." autocomplete="off">
+                <div class="border border-slate-200 rounded-xl bg-slate-50 overflow-y-auto flex-1 shadow-inner min-h-[200px]">
+                    <table class="w-full text-left text-xs md:text-sm">
                         <tbody id="tbody-buscar-resultados" class="divide-y divide-slate-200"></tbody>
                     </table>
                 </div>
@@ -261,40 +261,129 @@
         </div>
     </div>
 
+    <!-- MODAL COBRO (F12) -->
+    <div id="modal-cobro" class="fixed inset-0 bg-slate-900/60 items-center justify-center z-50 backdrop-blur-sm hidden p-2 sm:p-0">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-[800px] flex flex-col overflow-hidden animate-in zoom-in-95 duration-200 max-h-[95vh]">
+            <div class="bg-blue-600 text-white px-4 md:px-6 py-3 md:py-4 font-black flex justify-between items-center text-lg md:text-xl shrink-0">
+                <span><i class="fa-solid fa-cash-register mr-2"></i> Procesar Pago</span>
+                <button onclick="closeCheckout()" class="hover:bg-blue-700 p-1.5 md:p-2 rounded-lg transition-colors"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="p-4 md:p-6 flex flex-col md:flex-row gap-4 md:gap-6 overflow-y-auto">
+                <!-- Seccion Cobro -->
+                <div class="flex-1 flex flex-col items-center border-b md:border-b-0 md:border-r border-slate-200 pb-4 md:pb-0 md:pr-6">
+                    <span class="text-slate-500 font-bold uppercase tracking-widest text-[10px] md:text-sm mb-1 md:mb-2">Total a Cobrar</span>
+                    <div id="modal-total" class="text-4xl md:text-6xl font-black text-blue-600 font-mono mb-4 md:mb-6">$0.00</div>
+                    
+                    <div class="flex w-full gap-2 mb-4 md:mb-6">
+                        <button onclick="setPaymentMethod('efectivo')" id="btn-pay-efectivo" class="flex-1 py-2.5 md:py-3 rounded-xl font-bold border-2 border-blue-500 bg-blue-50 text-blue-700 transition-all text-sm md:text-base"><i class="fa-solid fa-money-bill-wave mb-1 text-lg md:text-xl block"></i> Efectivo</button>
+                        <button onclick="setPaymentMethod('credito')" id="btn-pay-credito" class="flex-1 py-2.5 md:py-3 rounded-xl font-bold border-2 border-slate-200 bg-white text-slate-500 hover:border-slate-300 transition-all text-sm md:text-base"><i class="fa-solid fa-credit-card mb-1 text-lg md:text-xl block"></i> Crédito</button>
+                    </div>
+
+                    <div id="section-efectivo" class="w-full flex flex-col gap-3 md:gap-4">
+                        <div>
+                            <label class="block text-xs md:text-sm font-bold text-slate-600 mb-1">Recibido ($):</label>
+                            <input type="number" id="inputPagaCon" oninput="calcularCambio()" onkeydown="handlePagaConKey(event)" class="w-full border-2 border-slate-300 rounded-xl px-3 md:px-4 py-2.5 md:py-3 text-xl md:text-2xl font-mono focus:border-blue-500 focus:ring-4 outline-none text-right">
+                        </div>
+                        <div class="bg-slate-100 p-3 md:p-4 rounded-xl border border-slate-200 flex justify-between items-center">
+                            <span class="font-bold text-slate-600 text-sm md:text-base">Cambio:</span>
+                            <span id="modal-cambio" class="text-2xl md:text-3xl font-black font-mono text-slate-400">$0.00</span>
+                        </div>
+                    </div>
+
+                    <div id="section-credito" class="w-full hidden flex flex-col gap-3 md:gap-4">
+                        <label class="block text-xs md:text-sm font-bold text-slate-600 mb-1">Seleccionar Cliente:</label>
+                        <select id="select-cliente" class="w-full border-2 border-slate-300 rounded-xl px-3 md:px-4 py-2.5 md:py-3 font-bold text-sm md:text-base focus:border-blue-500 outline-none"></select>
+                    </div>
+                </div>
+                <!-- Seccion Acciones -->
+                <div class="w-full md:w-64 flex flex-col gap-3 md:gap-4 justify-between shrink-0">
+                    <div class="flex flex-col gap-2 md:gap-3 order-2 md:order-1">
+                        <button onclick="finalizarVenta(true)" class="w-full bg-green-500 hover:bg-green-600 text-white font-black py-3 md:py-4 rounded-xl shadow-lg transition-transform active:scale-95 text-base md:text-lg flex items-center justify-center gap-2"><i class="fa-solid fa-print"></i> COBRAR</button>
+                        <button onclick="closeCheckout()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold py-2.5 md:py-3 rounded-xl transition-colors text-sm md:text-base">Cancelar (ESC)</button>
+                    </div>
+                    <div class="bg-slate-50 p-3 md:p-4 rounded-xl text-center border border-slate-200 order-1 md:order-2 flex md:block justify-between items-center">
+                        <span class="text-slate-400 text-[10px] md:text-xs font-bold uppercase">Artículos</span>
+                        <div id="modal-total-items" class="text-xl md:text-3xl font-black text-slate-700 md:mt-1">0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL GRANEL / PESO -->
+    <div id="modal-granel" class="fixed inset-0 bg-slate-900/60 items-center justify-center z-50 backdrop-blur-sm hidden p-2 sm:p-0">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-[400px] flex flex-col overflow-hidden animate-in zoom-in-95 duration-200">
+            <div class="bg-amber-500 text-white px-4 md:px-6 py-3 md:py-4 font-black flex justify-between items-center text-lg md:text-xl">
+                <span><i class="fa-solid fa-scale-balanced mr-2"></i> Venta a Granel</span>
+                <button onclick="cerrarModalGranel()" class="hover:bg-amber-600 p-1.5 md:p-2 rounded-lg transition-colors"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="p-4 md:p-6 flex flex-col gap-3 md:gap-4 text-center">
+                <h3 id="modal-granel-titulo" class="text-lg md:text-xl font-bold text-slate-800 leading-tight">Producto</h3>
+                <p id="modal-granel-precio" class="text-slate-500 font-mono font-bold text-sm md:text-base">$0.00 / Kg</p>
+                <div class="mt-1 md:mt-2">
+                    <label class="block text-xs md:text-sm font-bold text-slate-600 mb-1 md:mb-2 text-left">Peso exacto (Kg o Gramos):</label>
+                    <input type="number" id="input-granel-peso" oninput="calcularTotalGranel()" onkeydown="if(event.key==='Enter') agregarGranel()" class="w-full border-2 border-amber-300 rounded-xl px-3 py-2 md:px-4 md:py-3 text-xl md:text-2xl font-mono focus:border-amber-500 focus:ring-4 outline-none text-center" placeholder="Ej: 0.250">
+                </div>
+                <div class="bg-slate-100 p-3 md:p-4 rounded-xl border border-slate-200 flex justify-between items-center mt-1 md:mt-2">
+                    <span class="font-bold text-slate-600 text-sm md:text-base">Importe:</span>
+                    <span id="modal-granel-total" class="text-2xl md:text-3xl font-black font-mono text-amber-600">$0.00</span>
+                </div>
+                <button onclick="agregarGranel()" class="mt-2 md:mt-4 w-full bg-amber-500 hover:bg-amber-600 text-white font-black py-3 md:py-4 rounded-xl shadow-lg transition-transform active:scale-95 text-base md:text-lg">Añadir (Enter)</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- MODAL ARTICULO COMUN -->
+    <div id="modal-art-comun" class="fixed inset-0 bg-slate-900/60 items-center justify-center z-50 backdrop-blur-sm hidden p-2 sm:p-0">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-[400px] flex flex-col overflow-hidden animate-in zoom-in-95 duration-200">
+            <div class="bg-emerald-500 text-white px-4 md:px-6 py-3 md:py-4 font-black flex justify-between items-center text-lg md:text-xl">
+                <span><i class="fa-solid fa-tag mr-2"></i> Artículo Libre</span>
+                <button onclick="cerrarModalArtComun()" class="hover:bg-emerald-600 p-1.5 md:p-2 rounded-lg transition-colors"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="p-4 md:p-6 flex flex-col gap-3 md:gap-4">
+                <div>
+                    <label class="block text-xs md:text-sm font-bold text-slate-600 mb-1 md:mb-2">Descripción (Opcional):</label>
+                    <input type="text" id="input-comun-desc" class="w-full border-2 border-slate-300 rounded-xl px-3 py-2 md:px-4 md:py-3 focus:border-emerald-500 outline-none" placeholder="Ej: Recarga, Copias, etc.">
+                </div>
+                <div>
+                    <label class="block text-xs md:text-sm font-bold text-slate-600 mb-1 md:mb-2">Precio ($):</label>
+                    <input type="number" id="input-comun-precio" onkeydown="if(event.key==='Enter') agregarArtComun()" class="w-full border-2 border-emerald-300 rounded-xl px-3 py-2 md:px-4 md:py-3 text-xl md:text-2xl font-mono focus:border-emerald-500 outline-none text-right" placeholder="0.00">
+                </div>
+                <button onclick="agregarArtComun()" class="mt-2 md:mt-4 w-full bg-emerald-500 hover:bg-emerald-600 text-white font-black py-3 md:py-4 rounded-xl shadow-lg transition-transform active:scale-95 text-base md:text-lg">Añadir (Enter)</button>
+            </div>
+        </div>
+    </div>
 
     <!-- ============================================================================ -->
     <!-- LOGICA PRINCIPAL (INTERFAZ) -->
     <!-- ============================================================================ -->
     <script>
         let DB = { productos: [], clientes: [] };
-        let AppState = { tabActual: 'ventas', carrito: [], numeroTicket: 1, modalAbierto: false };
+        let AppState = { tabActual: 'ventas', carrito: [], numeroTicket: 1, modalAbierto: false, metodoPagoActivo: 'efectivo' };
         let productoEditandoId = null;
+        let productoGranelTemporal = null;
 
         // Guardar en la Nube y en Local Storage
         function guardarDB() { 
             localStorage.setItem('DB_Abarrotes_Betty', JSON.stringify(DB)); 
-            
-            // Si la función de firebase (del segundo script) existe, sube la información
             if (window.guardarEnNube) {
                 window.guardarEnNube(DB);
             }
         }
         
-        // Carga inicial local (mientras conecta a la nube)
         function cargarDB() {
             const guardado = localStorage.getItem('DB_Abarrotes_Betty');
             if (guardado) {
                 DB = JSON.parse(guardado);
             } else {
                 DB.productos = [
-                    { id: '709', desc: 'Rastrillo Dorusa TD-709', departamento: 'Higiene', costo: 20.00, precio: 31.30, stock: 45, minStock: 10 },
-                    { id: '123', desc: 'Coca Cola Regular 600ml', departamento: 'Refrescos', costo: 12.50, precio: 18.50, stock: 120, minStock: 50 }
+                    { id: '709', desc: 'Rastrillo Dorusa', departamento: 'Higiene', costo: 20.00, precio: 31.30, stock: 45, minStock: 10, granel: false },
+                    { id: '100', desc: 'Jamón de Pavo', departamento: 'Salchichonería', costo: 100.00, precio: 140.00, stock: 5, minStock: 2, granel: true }
                 ];
                 guardarDB();
             }
         }
 
-        // Esta función será llamada automáticamente por Firebase cuando descargue la información de la nube
         window.actualizarDesdeNube = function(dataNube) {
             DB = dataNube;
             localStorage.setItem('DB_Abarrotes_Betty', JSON.stringify(DB));
@@ -304,7 +393,13 @@
             if(AppState.tabActual === 'clientes') renderClientes();
         };
 
-        setInterval(() => { const d = new Date(); document.getElementById('reloj-ventas').innerText = d.toLocaleTimeString('en-US', {hour12:false}); document.getElementById('fecha-ventas').innerText = d.toLocaleDateString(); }, 1000);
+        setInterval(() => { 
+            const d = new Date(); 
+            const reloj = document.getElementById('reloj-ventas');
+            const fecha = document.getElementById('fecha-ventas');
+            if(reloj) reloj.innerText = d.toLocaleTimeString('en-US', {hour12:false}); 
+            if(fecha) fecha.innerText = d.toLocaleDateString(); 
+        }, 1000);
 
         function switchTab(tabId) {
             AppState.tabActual = tabId;
@@ -315,8 +410,10 @@
             });
             document.getElementById(`view-${tabId}`).classList.remove('hidden');
             const activeBtn = document.getElementById(`btn-tab-${tabId}`);
-            activeBtn.classList.remove('bg-slate-100', 'text-slate-500', 'border-transparent');
-            activeBtn.classList.add('tab-active', 'bg-white', 'text-slate-600', 'border-slate-300');
+            if(activeBtn) {
+                activeBtn.classList.remove('bg-slate-100', 'text-slate-500', 'border-transparent');
+                activeBtn.classList.add('tab-active', 'bg-white', 'text-slate-600', 'border-slate-300');
+            }
 
             if (tabId === 'ventas') { setTimeout(() => document.getElementById('barcodeInput').focus(), 50); } 
             else if (tabId === 'productos') { renderProductos(); } 
@@ -327,11 +424,18 @@
             if (!codigo.trim()) return;
             const producto = DB.productos.find(p => p.id === codigo.trim());
             if (producto) {
-                const existente = AppState.carrito.find(item => item.id === producto.id);
-                if (existente) existente.cantidad += 1; else AppState.carrito.push({ ...producto, cantidad: 1 });
-                actualizarInterfazVentas();
+                if (producto.granel) {
+                    abrirModalGranel(producto);
+                } else {
+                    const existente = AppState.carrito.find(item => item.id === producto.id);
+                    if (existente) existente.cantidad += 1; else AppState.carrito.push({ ...producto, cantidad: 1 });
+                    actualizarInterfazVentas();
+                }
+            } else {
+                alert(`El producto "${codigo}" no existe en la base de datos.`);
             }
         }
+        
         function handleBarcodeSubmit(e) { e.preventDefault(); procesarCodigoBarras(document.getElementById('barcodeInput').value); document.getElementById('barcodeInput').value = ''; }
         
         let scannerBuffer = ''; let lastKeyTime = Date.now();
@@ -350,30 +454,220 @@
             if (e.key === 'F3' && !AppState.modalAbierto) { e.preventDefault(); switchTab('productos'); }
             if (e.key === 'F4' && !AppState.modalAbierto) { e.preventDefault(); switchTab('inventario'); }
             if (e.key === 'F5' && AppState.tabActual==='ventas') { e.preventDefault(); vaciarCarrito(); }
-            if (e.key === 'F10' && AppState.tabActual==='ventas') { e.preventDefault(); abrirModalBuscar(); }
-            if (e.key === 'Escape') { cerrarModalBuscar(); cerrarModalProducto(); }
+            if (e.key === 'F10' && AppState.tabActual==='ventas' && !AppState.modalAbierto) { e.preventDefault(); abrirModalBuscar(); }
+            if (e.key === 'F12' && AppState.tabActual==='ventas' && !AppState.modalAbierto && AppState.carrito.length > 0) { e.preventDefault(); openCheckout(); }
+            if (e.key === 'Escape') { cerrarModalBuscar(); cerrarModalProducto(); closeCheckout(); cerrarModalGranel(); cerrarModalArtComun(); }
         });
 
+        // --- MANEJO DEL CARRITO Y CANTIDADES ---
         function vaciarCarrito() { if(confirm("¿Vaciar venta?")) { AppState.carrito = []; actualizarInterfazVentas(); document.getElementById('barcodeInput').focus(); } }
         function removerDelCarrito(idx) { AppState.carrito.splice(idx, 1); actualizarInterfazVentas(); }
+        function incrementarCantidad(idx) { AppState.carrito[idx].cantidad += 1; actualizarInterfazVentas(); }
+        function decrementarCantidad(idx) { 
+            if(AppState.carrito[idx].cantidad > 1) {
+                AppState.carrito[idx].cantidad -= 1; 
+            } else {
+                AppState.carrito.splice(idx, 1);
+            }
+            actualizarInterfazVentas(); 
+        }
         
         function actualizarInterfazVentas() {
-            const tbody = document.getElementById('cart-tbody'); tbody.innerHTML = '';
+            const tbody = document.getElementById('cart-tbody'); 
+            if(!tbody) return;
+            tbody.innerHTML = '';
             let total = 0; let items = 0;
             AppState.carrito.forEach((item, idx) => {
-                const importe = item.precio * item.cantidad; total += importe; items += item.cantidad;
-                tbody.innerHTML += `<tr class="border-b border-slate-100 hover:bg-blue-50/50 bg-white"><td class="p-3 text-center font-black text-lg text-slate-700">${item.cantidad}</td><td class="p-3 font-mono text-slate-400 font-semibold">${item.id}</td><td class="p-3 font-bold text-slate-800">${item.desc}</td><td class="p-3 text-right text-slate-500 font-mono">$${item.precio.toFixed(2)}</td><td class="p-3 text-right font-black text-blue-600 font-mono text-lg">$${importe.toFixed(2)}</td><td class="p-3 text-center"><button onclick="removerDelCarrito(${idx})" class="text-red-400 hover:text-red-600 hover:bg-red-50 p-2 rounded-lg transition-colors"><i class="fa-solid fa-trash-can"></i></button></td></tr>`;
+                const importe = item.precio * item.cantidad; total += importe; items += (item.granel ? 1 : item.cantidad);
+                
+                // Si es granel o articulo común, no mostramos botones de +/- por ser de peso customizado
+                const controls = item.granel || item.id === 'VARIOS' 
+                    ? `<span class="font-black text-lg text-slate-700">${item.cantidad} ${item.granel ? 'kg' : ''}</span>`
+                    : `
+                    <button onclick="decrementarCantidad(${idx})" class="w-8 h-8 rounded-lg bg-slate-200 text-slate-600 font-bold hover:bg-slate-300">-</button>
+                    <span class="font-black text-lg text-slate-700 min-w-[2rem]">${item.cantidad}</span>
+                    <button onclick="incrementarCantidad(${idx})" class="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 font-bold hover:bg-blue-200">+</button>
+                    `;
+
+                tbody.innerHTML += `
+                <tr class="border-b border-slate-100 hover:bg-blue-50/50 bg-white">
+                    <td class="p-3 text-center">
+                        <div class="flex items-center justify-center gap-2">${controls}</div>
+                    </td>
+                    <td class="p-3 font-mono text-slate-400 font-semibold">${item.id}</td>
+                    <td class="p-3 font-bold text-slate-800">${item.desc}</td>
+                    <td class="p-3 text-right text-slate-500 font-mono">$${item.precio.toFixed(2)}</td>
+                    <td class="p-3 text-right font-black text-blue-600 font-mono text-lg">$${importe.toFixed(2)}</td>
+                    <td class="p-3 text-center"><button onclick="removerDelCarrito(${idx})" class="text-red-400 hover:text-red-600 hover:bg-red-50 p-2 rounded-lg transition-colors"><i class="fa-solid fa-trash-can"></i></button></td>
+                </tr>`;
             });
             document.getElementById('lbl-gran-total').innerText = `$${total.toFixed(2)}`;
             document.getElementById('lbl-total-items').innerText = items;
+            
+            const btnCobrar = document.getElementById('btn-cobrar-principal');
+            if(btnCobrar) btnCobrar.disabled = AppState.carrito.length === 0;
         }
 
+        // --- GRANEL Y VARIOS ---
+        function abrirModalGranel(producto) {
+            productoGranelTemporal = producto;
+            AppState.modalAbierto = true;
+            document.getElementById('modal-granel-titulo').innerText = producto.desc;
+            document.getElementById('modal-granel-precio').innerText = `$${producto.precio.toFixed(2)} / Kg`;
+            document.getElementById('input-granel-peso').value = '';
+            document.getElementById('modal-granel-total').innerText = '$0.00';
+            document.getElementById('modal-granel').classList.replace('hidden', 'flex');
+            setTimeout(() => document.getElementById('input-granel-peso').focus(), 100);
+        }
+
+        function cerrarModalGranel() {
+            AppState.modalAbierto = false;
+            document.getElementById('modal-granel').classList.replace('flex', 'hidden');
+            setTimeout(() => document.getElementById('barcodeInput').focus(), 100);
+        }
+
+        function calcularTotalGranel() {
+            const peso = parseFloat(document.getElementById('input-granel-peso').value) || 0;
+            const total = peso * productoGranelTemporal.precio;
+            document.getElementById('modal-granel-total').innerText = `$${total.toFixed(2)}`;
+        }
+
+        function agregarGranel() {
+            const peso = parseFloat(document.getElementById('input-granel-peso').value);
+            if(!peso || peso <= 0) return alert("Ingrese un peso válido");
+            
+            AppState.carrito.push({
+                ...productoGranelTemporal,
+                cantidad: peso,
+                desc: `${productoGranelTemporal.desc} (${peso} Kg)`
+            });
+            actualizarInterfazVentas();
+            cerrarModalGranel();
+        }
+
+        function abrirModalArtComun() {
+            AppState.modalAbierto = true;
+            document.getElementById('input-comun-desc').value = '';
+            document.getElementById('input-comun-precio').value = '';
+            document.getElementById('modal-art-comun').classList.replace('hidden', 'flex');
+            setTimeout(() => document.getElementById('input-comun-precio').focus(), 100);
+        }
+
+        function cerrarModalArtComun() {
+            AppState.modalAbierto = false;
+            document.getElementById('modal-art-comun').classList.replace('flex', 'hidden');
+            setTimeout(() => document.getElementById('barcodeInput').focus(), 100);
+        }
+
+        function agregarArtComun() {
+            const precio = parseFloat(document.getElementById('input-comun-precio').value);
+            if(!precio || precio <= 0) return alert("Precio inválido");
+            const desc = document.getElementById('input-comun-desc').value || 'Artículo Varios';
+            AppState.carrito.push({ id: 'VARIOS', desc: desc, precio: precio, costo: 0, cantidad: 1, granel: false });
+            actualizarInterfazVentas();
+            cerrarModalArtComun();
+        }
+
+        // --- LÓGICA DE COBRO ---
+        function getTotales() { return AppState.carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0); }
+        
+        function openCheckout() {
+            if (AppState.carrito.length === 0 || AppState.modalAbierto) return;
+            AppState.modalAbierto = true;
+            const total = getTotales();
+            document.getElementById('modal-total').innerText = `$${total.toFixed(2)}`;
+            document.getElementById('modal-total-items').innerText = AppState.carrito.length;
+            
+            const select = document.getElementById('select-cliente');
+            select.innerHTML = DB.clientes.map(c => `<option value="${c.id}">${c.nombre} (Deuda: $${c.deuda.toFixed(2)})</option>`).join('');
+
+            document.getElementById('inputPagaCon').value = '';
+            document.getElementById('modal-cambio').innerText = '$0.00';
+            document.getElementById('modal-cambio').classList.remove('text-green-500', 'text-red-500');
+            setPaymentMethod('efectivo');
+
+            document.getElementById('modal-cobro').classList.replace('hidden', 'flex');
+            setTimeout(() => document.getElementById('inputPagaCon').focus(), 100);
+        }
+
+        function closeCheckout() {
+            AppState.modalAbierto = false;
+            document.getElementById('modal-cobro').classList.replace('flex', 'hidden');
+            setTimeout(() => document.getElementById('barcodeInput').focus(), 100);
+        }
+
+        function setPaymentMethod(method) {
+            AppState.metodoPagoActivo = method;
+            const btnEfe = document.getElementById('btn-pay-efectivo');
+            const btnCre = document.getElementById('btn-pay-credito');
+            
+            btnEfe.className = method === 'efectivo' 
+                ? "flex-1 py-3 rounded-xl font-bold border-2 border-blue-500 bg-blue-50 text-blue-700 transition-all" 
+                : "flex-1 py-3 rounded-xl font-bold border-2 border-slate-200 bg-white text-slate-500 hover:border-slate-300 transition-all";
+            btnCre.className = method === 'credito' 
+                ? "flex-1 py-3 rounded-xl font-bold border-2 border-blue-500 bg-blue-50 text-blue-700 transition-all" 
+                : "flex-1 py-3 rounded-xl font-bold border-2 border-slate-200 bg-white text-slate-500 hover:border-slate-300 transition-all";
+
+            document.getElementById('section-efectivo').style.display = method === 'efectivo' ? 'flex' : 'none';
+            document.getElementById('section-credito').style.display = method === 'credito' ? 'flex' : 'none';
+            
+            if(method === 'efectivo') setTimeout(() => document.getElementById('inputPagaCon').focus(), 50);
+        }
+
+        function calcularCambio() {
+            const pagaCon = parseFloat(document.getElementById('inputPagaCon').value) || 0;
+            const total = getTotales();
+            const cambio = pagaCon - total;
+            const divCambio = document.getElementById('modal-cambio');
+            
+            if (cambio >= 0 && pagaCon > 0) {
+                divCambio.innerText = `$${cambio.toFixed(2)}`;
+                divCambio.className = "text-3xl font-black font-mono text-green-500";
+            } else if (pagaCon > 0) {
+                divCambio.innerText = "Falta Dinero";
+                divCambio.className = "text-xl font-black font-mono text-red-500";
+            } else {
+                divCambio.innerText = "$0.00";
+                divCambio.className = "text-3xl font-black font-mono text-slate-400";
+            }
+        }
+
+        function handlePagaConKey(e) { if(e.key === 'Enter') finalizarVenta(true); }
+
+        function finalizarVenta(imprimir) {
+            const total = getTotales();
+            const pagaCon = parseFloat(document.getElementById('inputPagaCon').value) || 0;
+
+            if (AppState.metodoPagoActivo === 'efectivo' && pagaCon < total) {
+                return alert("El monto ingresado es menor al total a cobrar.");
+            }
+
+            // Descontar inventario
+            AppState.carrito.forEach(item => {
+                if(item.id !== 'VARIOS' && !item.granel) {
+                    const prodDB = DB.productos.find(p => p.id === item.id);
+                    if (prodDB) prodDB.stock -= item.cantidad;
+                }
+            });
+
+            AppState.carrito = [];
+            AppState.numeroTicket++;
+            localStorage.setItem('Ticket_Actual_Betty', AppState.numeroTicket);
+            guardarDB(); 
+
+            actualizarInterfazVentas();
+            closeCheckout();
+            alert("¡Venta procesada con éxito!");
+        }
+
+        // --- GESTION PRODUCTOS E INVENTARIO ---
         function renderProductos() {
             const tbody = document.getElementById('productos-tbody');
+            if(!tbody) return;
             tbody.innerHTML = DB.productos.map(p => `
                 <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors bg-white">
                     <td class="p-3 font-mono text-slate-500 font-semibold">${p.id}</td>
-                    <td class="p-3 font-bold text-slate-800">${p.desc}</td>
+                    <td class="p-3 font-bold text-slate-800">${p.desc} ${p.granel ? '<span class="text-[10px] bg-amber-100 text-amber-700 px-1 rounded ml-1 uppercase">Granel</span>' : ''}</td>
                     <td class="p-3 text-slate-500"><span class="bg-slate-100 px-2 py-1 rounded text-xs border border-slate-200">${p.departamento || 'General'}</span></td>
                     <td class="p-3 text-right font-mono text-slate-500">$${p.costo.toFixed(2)}</td>
                     <td class="p-3 text-right font-mono font-bold text-blue-600">$${p.precio.toFixed(2)}</td>
@@ -387,6 +681,10 @@
         function abrirModalProducto() { 
             productoEditandoId = null;
             document.getElementById('titulo-modal-prod').innerHTML = '<i class="fa-solid fa-plus mr-2"></i> Nuevo Producto';
+            
+            // Si el modal está modificado para Granel
+            const inpGranel = document.getElementById('nuevo-prod-granel');
+            
             document.getElementById('nuevo-prod-codigo').value = '';
             document.getElementById('nuevo-prod-codigo').disabled = false;
             document.getElementById('nuevo-prod-desc').value = '';
@@ -395,6 +693,8 @@
             document.getElementById('nuevo-prod-precio').value = '';
             document.getElementById('nuevo-prod-stock').value = '';
             document.getElementById('nuevo-prod-min').value = '';
+            if(inpGranel) inpGranel.checked = false;
+            
             document.getElementById('modal-producto').classList.replace('hidden', 'flex'); 
             AppState.modalAbierto = true;
             setTimeout(() => document.getElementById('nuevo-prod-codigo').focus(), 100);
@@ -404,6 +704,9 @@
             const p = DB.productos.find(x => x.id === id); if(!p) return;
             productoEditandoId = id;
             document.getElementById('titulo-modal-prod').innerHTML = '<i class="fa-solid fa-pen mr-2"></i> Editar Producto';
+            
+            const inpGranel = document.getElementById('nuevo-prod-granel');
+
             document.getElementById('nuevo-prod-codigo').value = p.id;
             document.getElementById('nuevo-prod-codigo').disabled = true; 
             document.getElementById('nuevo-prod-desc').value = p.desc;
@@ -412,6 +715,8 @@
             document.getElementById('nuevo-prod-precio').value = p.precio;
             document.getElementById('nuevo-prod-stock').value = p.stock || 0;
             document.getElementById('nuevo-prod-min').value = p.minStock || 0;
+            if(inpGranel) inpGranel.checked = !!p.granel;
+            
             document.getElementById('modal-producto').classList.replace('hidden', 'flex');
             AppState.modalAbierto = true;
         }
@@ -419,6 +724,7 @@
         function cerrarModalProducto() { 
             document.getElementById('modal-producto').classList.replace('flex', 'hidden'); 
             AppState.modalAbierto = false; 
+            setTimeout(() => document.getElementById('barcodeInput').focus(), 100);
         }
 
         function guardarProducto() {
@@ -426,13 +732,16 @@
             if(!id) return alert("Falta el código");
 
             const depto = document.getElementById('nuevo-prod-depto').value.trim() || 'General';
+            const inpGranel = document.getElementById('nuevo-prod-granel');
+            
             const datos = {
                 id: id, desc: document.getElementById('nuevo-prod-desc').value || "Sin nombre",
                 departamento: depto,
                 costo: parseFloat(document.getElementById('nuevo-prod-costo').value) || 0,
                 precio: parseFloat(document.getElementById('nuevo-prod-precio').value) || 0,
-                stock: parseInt(document.getElementById('nuevo-prod-stock').value) || 0,
-                minStock: parseInt(document.getElementById('nuevo-prod-min').value) || 0
+                stock: parseFloat(document.getElementById('nuevo-prod-stock').value) || 0,
+                minStock: parseFloat(document.getElementById('nuevo-prod-min').value) || 0,
+                granel: inpGranel ? inpGranel.checked : false
             };
 
             if (productoEditandoId) {
@@ -472,7 +781,8 @@
                             id: id, desc: c[1] ? c[1].trim() : '', 
                             costo: parseFloat(c[2]) || 0, precio: parseFloat(c[3]) || 0, 
                             departamento: c[4] ? c[4].trim() : 'General',
-                            stock: parseInt(c[5]) || 0, minStock: parseInt(c[6]) || 0
+                            stock: parseFloat(c[5]) || 0, minStock: parseFloat(c[6]) || 0,
+                            granel: false
                         };
                         if(index >= 0) { DB.productos[index] = nuevoProd; } 
                         else { DB.productos.push(nuevoProd); }
@@ -487,6 +797,7 @@
 
         function renderInventario() {
             const tbody = document.getElementById('inventario-tbody');
+            if(!tbody) return;
             tbody.innerHTML = DB.productos.map(p => `
                 <tr class="border-b border-slate-100 hover:bg-slate-50 bg-white">
                     <td class="p-3 font-mono text-slate-500">${p.id}</td>
@@ -535,8 +846,10 @@
         import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Aquí están tus llaves de Firebase (abarrotesbetty-cf954)
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
+        // Verifica si estamos en la plataforma (Canvas) o en tu PC local
+        const isCanvas = typeof __firebase_config !== 'undefined';
+        
+        const firebaseConfig = isCanvas ? JSON.parse(__firebase_config) : {
             apiKey: "AIzaSyAWvUFgdINQ-3UPLQLpHVwq85Efidge6uE",
             authDomain: "abarrotesbetty-cf954.firebaseapp.com",
             projectId: "abarrotesbetty-cf954",
@@ -553,9 +866,10 @@
 
         window.initFirebaseSync = async function() {
             try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                if (isCanvas && typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
                     await signInWithCustomToken(auth, __initial_auth_token);
                 } else {
+                    // Nota: Para que funcione en tu PC sin error, tu proyecto Firebase debe tener activado el inicio de sesion Anónimo (Anonymous Auth)
                     await signInAnonymously(auth);
                 }
 
@@ -569,33 +883,37 @@
             } catch(e) {
                 console.error("Error Autenticando con Firebase:", e);
                 const statusEl = document.getElementById("nube-status");
-                if(statusEl) statusEl.innerHTML = `<i class="fa-solid fa-cloud-bolt text-red-400"></i> Error Nube`;
+                // Mostrará el error al pasar el mouse por encima para ayudarte a diagnosticar
+                if(statusEl) statusEl.innerHTML = `<i class="fa-solid fa-cloud-bolt text-red-400"></i> <span class="text-red-300" title="${e.message}">Error Nube (Ver Consola)</span>`;
             }
         };
 
-        // Función que manda la base de datos a la nube
         window.guardarEnNube = async function(dbState) {
             if (auth.currentUser) {
                 try {
                     const statusEl = document.getElementById("nube-status");
                     if(statusEl) statusEl.innerHTML = `<i class="fa-solid fa-cloud-arrow-up text-amber-400 animate-bounce"></i> Guardando...`;
                     
-                    const docRef = doc(db, 'artifacts', appIdStr, 'users', auth.currentUser.uid, 'store', 'db_state');
+                    const docRef = isCanvas 
+                        ? doc(db, 'artifacts', appIdStr, 'users', auth.currentUser.uid, 'store', 'db_state')
+                        : doc(db, 'usuarios', auth.currentUser.uid, 'store', 'db_state');
+                        
                     await setDoc(docRef, { data: JSON.stringify(dbState) });
                     
                     if(statusEl) statusEl.innerHTML = `<i class="fa-solid fa-cloud text-emerald-400"></i> Sincronizado`;
                 } catch(e) {
                     console.error("Error Guardando en Nube:", e);
                     const statusEl = document.getElementById("nube-status");
-                    if(statusEl) statusEl.innerHTML = `<i class="fa-solid fa-cloud-bolt text-red-400"></i> Error Nube`;
+                    if(statusEl) statusEl.innerHTML = `<i class="fa-solid fa-cloud-bolt text-red-400"></i> <span title="${e.message}">Error al Guardar</span>`;
                 }
             }
         };
 
-        // Función que descarga la base de datos al iniciar
         window.cargarDeNube = async function(user) {
             try {
-                const docRef = doc(db, 'artifacts', appIdStr, 'users', user.uid, 'store', 'db_state');
+                const docRef = isCanvas 
+                    ? doc(db, 'artifacts', appIdStr, 'users', user.uid, 'store', 'db_state')
+                    : doc(db, 'usuarios', user.uid, 'store', 'db_state');
                 const docSnap = await getDoc(docRef);
                 if (docSnap.exists()) {
                     const data = JSON.parse(docSnap.data().data);

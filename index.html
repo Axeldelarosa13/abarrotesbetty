@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -1579,6 +1578,29 @@
         </div>
     </div>
 
+    <div id="modal-login-firebase" class="modal">
+        <div class="modal-card" style="--modal-w: 430px;">
+            <div class="modal-head head-slate">
+                <span><i class="fa-solid fa-cloud-lock mr-2"></i> Acceso a la Nube</span>
+            </div>
+            <div class="modal-body">
+                <div class="flex flex-col gap-4">
+                    <div class="field-group">
+                        <label for="firebase-login-email">Usuario Firebase</label>
+                        <input type="email" id="firebase-login-email" class="field font-black" value="betty@admin.com" autocomplete="username">
+                    </div>
+                    <div class="field-group">
+                        <label for="firebase-login-password">Contraseña</label>
+                        <input type="password" id="firebase-login-password" class="field font-black" placeholder="betty1234" autocomplete="current-password" onkeydown="if(event.key==='Enter') window.iniciarSesionBetty()">
+                        <small>Los datos se guardarán en la cuenta que inicies aquí.</small>
+                    </div>
+                    <div id="firebase-login-error" class="hidden bg-red-50 border border-red-200 text-red-700 rounded-lg p-3 text-sm font-bold"></div>
+                    <button onclick="window.iniciarSesionBetty()" id="btn-login-firebase" class="btn btn-blue min-h-[48px]" type="button"><i class="fa-solid fa-right-to-bracket"></i> Entrar y Sincronizar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="toast" class="toast"></div>
 
     <script>
@@ -1594,6 +1616,8 @@
         };
         let productoEditandoId = null;
         let isGranelLibre = false;
+        const DB_LOCAL_KEY = 'DB_Abarrotes_Betty';
+        const DB_UPDATED_KEY = 'DB_Abarrotes_Betty_UpdatedAt';
 
         const money = (value) => `$${(Number(value) || 0).toFixed(2)}`;
         const esc = (value) => String(value ?? '').replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[ch]));
@@ -1611,12 +1635,14 @@
         }
 
         function guardarDB() {
-            localStorage.setItem('DB_Abarrotes_Betty', JSON.stringify(DB));
-            if (window.guardarEnNube) window.guardarEnNube(DB);
+            const updatedAt = new Date().toISOString();
+            localStorage.setItem(DB_LOCAL_KEY, JSON.stringify(DB));
+            localStorage.setItem(DB_UPDATED_KEY, updatedAt);
+            if (window.guardarEnNube) window.guardarEnNube(DB, updatedAt);
         }
 
         function cargarDB() {
-            const guardado = localStorage.getItem('DB_Abarrotes_Betty');
+            const guardado = localStorage.getItem(DB_LOCAL_KEY);
             if (guardado) {
                 try {
                     const parsed = JSON.parse(guardado);
@@ -1647,14 +1673,15 @@
             }
         }
 
-        window.actualizarDesdeNube = function(dataNube) {
+        window.actualizarDesdeNube = function(dataNube, meta = {}) {
             DB.productos = dataNube.productos || [];
             DB.clientes = dataNube.clientes || [];
             DB.clientes.forEach(c => { if (!c.historial) c.historial = []; });
             DB.ventas = dataNube.ventas || [];
             DB.movimientos = dataNube.movimientos || [];
             DB.cortes = dataNube.cortes || [];
-            localStorage.setItem('DB_Abarrotes_Betty', JSON.stringify(DB));
+            localStorage.setItem(DB_LOCAL_KEY, JSON.stringify(DB));
+            if (meta?.updatedAt) localStorage.setItem(DB_UPDATED_KEY, meta.updatedAt);
             actualizarInterfazVentas();
             renderProductosFrecuentes();
             if (AppState.tabActual === 'productos') renderProductos();
@@ -2878,7 +2905,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signInWithCustomToken, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const isCanvas = typeof __firebase_config !== 'undefined';
@@ -2897,69 +2924,196 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+        const DB_LOCAL_KEY_MODULE = 'DB_Abarrotes_Betty';
+        const DB_UPDATED_KEY_MODULE = 'DB_Abarrotes_Betty_UpdatedAt';
+        const BETTY_EMAIL = 'betty@admin.com';
+
+        function getStoreDocRef(user) {
+            return isCanvas
+                ? doc(db, 'artifacts', appIdStr, 'users', user.uid, 'store', 'db_state')
+                : doc(db, 'usuarios', user.uid, 'store', 'db_state');
+        }
+
+        function readLocalBackup() {
+            const raw = localStorage.getItem(DB_LOCAL_KEY_MODULE);
+            if (!raw) return null;
+            try {
+                return {
+                    data: JSON.parse(raw),
+                    raw,
+                    updatedAt: localStorage.getItem(DB_UPDATED_KEY_MODULE)
+                };
+            } catch {
+                return null;
+            }
+        }
+
+        function countRecords(dbState) {
+            if (!dbState || typeof dbState !== 'object') return 0;
+            return ['productos', 'clientes', 'ventas', 'movimientos', 'cortes']
+                .reduce((sum, key) => sum + (Array.isArray(dbState[key]) ? dbState[key].length : 0), 0);
+        }
+
+        function isNewer(a, b) {
+            if (!a) return false;
+            if (!b) return true;
+            return new Date(a).getTime() > new Date(b).getTime();
+        }
+
+        function setCloudStatus(html) {
+            const statusEl = document.getElementById("nube-status");
+            if (statusEl) statusEl.innerHTML = html;
+        }
+
+        function showFirebaseLogin(message = '') {
+            const modal = document.getElementById('modal-login-firebase');
+            const emailInput = document.getElementById('firebase-login-email');
+            const passInput = document.getElementById('firebase-login-password');
+            const errorEl = document.getElementById('firebase-login-error');
+            if (emailInput && !emailInput.value) emailInput.value = BETTY_EMAIL;
+            if (errorEl) {
+                errorEl.textContent = message;
+                errorEl.classList.toggle('hidden', !message);
+            }
+            if (modal) modal.classList.add('flex');
+            setCloudStatus(`<i class="fa-solid fa-cloud-lock text-amber-300"></i><span>Inicia sesión</span>`);
+            setTimeout(() => passInput?.focus(), 80);
+        }
+
+        function hideFirebaseLogin() {
+            document.getElementById('modal-login-firebase')?.classList.remove('flex');
+            document.getElementById('firebase-login-error')?.classList.add('hidden');
+        }
+
+        function authMessage(error) {
+            if (error?.code === 'auth/invalid-credential' || error?.code === 'auth/wrong-password') return 'Usuario o contraseña incorrectos.';
+            if (error?.code === 'auth/user-not-found') return 'Ese usuario no existe en Firebase. Créalo en Authentication > Users.';
+            if (error?.code === 'auth/operation-not-allowed') return 'Activa Email/Password en Firebase Authentication.';
+            if (error?.code === 'auth/email-already-in-use') return 'Ese usuario ya existe. Revisa la contraseña.';
+            if (error?.code === 'auth/weak-password') return 'La contraseña no cumple la política de Firebase.';
+            if (error?.code === 'auth/too-many-requests') return 'Demasiados intentos. Espera un momento y vuelve a intentar.';
+            return error?.message || 'No se pudo iniciar sesión.';
+        }
+
+        window.iniciarSesionBetty = async function() {
+            const email = document.getElementById('firebase-login-email')?.value.trim() || BETTY_EMAIL;
+            const password = document.getElementById('firebase-login-password')?.value || '';
+            const btn = document.getElementById('btn-login-firebase');
+            const errorEl = document.getElementById('firebase-login-error');
+
+            if (!password) {
+                showFirebaseLogin('Escribe la contraseña de Betty.');
+                return;
+            }
+
+            try {
+                if (btn) {
+                    btn.disabled = true;
+                    btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Entrando...`;
+                }
+                if (errorEl) errorEl.classList.add('hidden');
+                setCloudStatus(`<i class="fa-solid fa-cloud-arrow-up text-amber-400 fa-bounce"></i><span>Entrando...</span>`);
+                await signInWithEmailAndPassword(auth, email, password);
+            } catch (error) {
+                const canCreateBettyUser = email.toLowerCase() === BETTY_EMAIL && ['auth/user-not-found', 'auth/invalid-credential'].includes(error?.code);
+                if (canCreateBettyUser) {
+                    try {
+                        setCloudStatus(`<i class="fa-solid fa-user-plus text-amber-400 fa-bounce"></i><span>Creando usuario...</span>`);
+                        await createUserWithEmailAndPassword(auth, email, password);
+                    } catch (createError) {
+                        console.error('Error creando usuario Betty:', createError);
+                        showFirebaseLogin(authMessage(createError));
+                    }
+                } else {
+                    console.error('Error iniciando sesión:', error);
+                    showFirebaseLogin(authMessage(error));
+                }
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = `<i class="fa-solid fa-right-to-bracket"></i> Entrar y Sincronizar`;
+                }
+            }
+        };
 
         window.initFirebaseSync = async function() {
             try {
                 if (isCanvas && typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
                     await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
                 }
 
                 onAuthStateChanged(auth, async (user) => {
                     if (user) {
-                        const statusEl = document.getElementById("nube-status");
-                        if (statusEl) statusEl.innerHTML = `<i class="fa-solid fa-cloud text-emerald-400"></i><span>Nube Activa</span>`;
+                        if (!isCanvas && user.email !== BETTY_EMAIL) {
+                            await signOut(auth);
+                            showFirebaseLogin('Inicia sesión con betty@admin.com para usar la nube de la tienda.');
+                            return;
+                        }
+                        hideFirebaseLogin();
+                        setCloudStatus(`<i class="fa-solid fa-cloud text-emerald-400"></i><span>${user.email || 'Nube Activa'}</span>`);
                         await window.cargarDeNube(user);
+                    } else {
+                        showFirebaseLogin();
                     }
                 });
             } catch(e) {
                 console.error("Error Autenticando con Firebase:", e);
-                const statusEl = document.getElementById("nube-status");
                 let errorMsg = "Error Nube";
-                if (e.code === 'auth/operation-not-allowed') errorMsg = "Falta activar Auth Anónimo";
-                if (statusEl) statusEl.innerHTML = `<i class="fa-solid fa-cloud-bolt text-red-400"></i><span class="text-red-300 font-bold ml-1">${errorMsg}</span>`;
+                if (e.code === 'auth/operation-not-allowed') errorMsg = "Activa Email/Password";
+                setCloudStatus(`<i class="fa-solid fa-cloud-bolt text-red-400"></i><span class="text-red-300 font-bold ml-1">${errorMsg}</span>`);
+                showFirebaseLogin(errorMsg);
             }
         };
 
-        window.guardarEnNube = async function(dbState) {
+        window.guardarEnNube = async function(dbState, updatedAt = null) {
             if (auth.currentUser) {
                 try {
-                    const statusEl = document.getElementById("nube-status");
-                    if (statusEl) statusEl.innerHTML = `<i class="fa-solid fa-cloud-arrow-up text-amber-400 fa-bounce"></i><span>Guardando...</span>`;
+                    setCloudStatus(`<i class="fa-solid fa-cloud-arrow-up text-amber-400 fa-bounce"></i><span>Guardando...</span>`);
 
-                    const docRef = isCanvas
-                        ? doc(db, 'artifacts', appIdStr, 'users', auth.currentUser.uid, 'store', 'db_state')
-                        : doc(db, 'usuarios', auth.currentUser.uid, 'store', 'db_state');
+                    const docRef = getStoreDocRef(auth.currentUser);
 
-                    await setDoc(docRef, { data: JSON.stringify(dbState) });
+                    await setDoc(docRef, {
+                        data: JSON.stringify(dbState),
+                        updatedAt: updatedAt || new Date().toISOString(),
+                        schemaVersion: 2
+                    });
 
-                    if (statusEl) statusEl.innerHTML = `<i class="fa-solid fa-cloud text-emerald-400"></i><span>Sincronizado</span>`;
+                    setCloudStatus(`<i class="fa-solid fa-cloud text-emerald-400"></i><span>Sincronizado</span>`);
                 } catch(e) {
                     console.error("Error Guardando en Nube:", e);
-                    const statusEl = document.getElementById("nube-status");
                     let errorMsg = "Error al Guardar";
                     if (e.code === 'permission-denied') errorMsg = "Error: Reglas de Firestore";
-                    if (statusEl) statusEl.innerHTML = `<i class="fa-solid fa-cloud-bolt text-red-400"></i><span class="text-red-300 font-bold ml-1" title="${e.message}">${errorMsg}</span>`;
+                    setCloudStatus(`<i class="fa-solid fa-cloud-bolt text-red-400"></i><span class="text-red-300 font-bold ml-1" title="${e.message}">${errorMsg}</span>`);
                 }
+            } else {
+                showFirebaseLogin('Inicia sesión para guardar en Firebase.');
             }
         };
 
         window.cargarDeNube = async function(user) {
             try {
-                const docRef = isCanvas
-                    ? doc(db, 'artifacts', appIdStr, 'users', user.uid, 'store', 'db_state')
-                    : doc(db, 'usuarios', user.uid, 'store', 'db_state');
+                const docRef = getStoreDocRef(user);
                 const docSnap = await getDoc(docRef);
+                const localBackup = readLocalBackup();
+
                 if (docSnap.exists()) {
-                    const data = JSON.parse(docSnap.data().data);
-                    if (window.actualizarDesdeNube) window.actualizarDesdeNube(data);
+                    const payload = docSnap.data();
+                    const cloudData = JSON.parse(payload.data);
+                    const cloudUpdatedAt = payload.updatedAt || null;
+                    const localHasMoreData = localBackup && countRecords(localBackup.data) > countRecords(cloudData);
+
+                    if (localBackup && (isNewer(localBackup.updatedAt, cloudUpdatedAt) || (!cloudUpdatedAt && localHasMoreData))) {
+                        await window.guardarEnNube(localBackup.data, localBackup.updatedAt || new Date().toISOString());
+                    } else if (window.actualizarDesdeNube) {
+                        window.actualizarDesdeNube(cloudData, { updatedAt: cloudUpdatedAt || new Date().toISOString() });
+                    }
+                } else if (localBackup) {
+                    await window.guardarEnNube(localBackup.data, localBackup.updatedAt || new Date().toISOString());
                 }
             } catch(e) {
                 console.error("Error Cargando desde Nube:", e);
-                const statusEl = document.getElementById("nube-status");
-                if (e.code === 'permission-denied' && statusEl) {
-                    statusEl.innerHTML = `<i class="fa-solid fa-cloud-bolt text-red-400"></i><span class="text-red-300 font-bold ml-1" title="Falta dar permisos en Firestore">Error: Reglas Firestore</span>`;
+                if (e.code === 'permission-denied') {
+                    setCloudStatus(`<i class="fa-solid fa-cloud-bolt text-red-400"></i><span class="text-red-300 font-bold ml-1" title="Falta dar permisos en Firestore">Error: Reglas Firestore</span>`);
                 }
             }
         };

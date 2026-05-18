@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Abarrotes "Betty" - Punto de Venta</title>
+    <title>Abarrotes "Betty" - Punto de Venta Pro</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -836,6 +836,68 @@
             .frequent-list { grid-template-columns: repeat(4, minmax(0, 1fr)); }
             .caja-grid { grid-template-columns: 1fr; }
         }
+        @media (max-width: 900px), (max-height: 560px) and (max-width: 1100px) {
+            .workspace { padding: 8px; }
+            .ticket-strip { min-height: 43px; padding: 6px 6px 0; }
+            .ticket-tab { height: 32px; min-width: 104px; padding: 0 9px; font-size: 12px; }
+            .ticket-add { width: 36px; height: 32px; }
+            .sale-toolbar { padding: 8px; gap: 8px; }
+            .barcode-input { height: 40px; font-size: 16px; }
+            .toolbar-actions { gap: 6px; }
+            .toolbar-actions .btn { min-height: 34px; padding: 0 9px; font-size: 12px; }
+            .sales-grid { grid-template-rows: minmax(0, 1fr) 116px; }
+            .frequent-title { height: 30px; font-size: 10px; letter-spacing: .05em; }
+            .frequent-list { padding: 7px; gap: 6px; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+            .quick-product { min-height: 66px; padding: 7px; }
+            .quick-product .name { font-size: 11px; }
+            .quick-product .amount { font-size: 12px; }
+            .sales-footer {
+                display: grid;
+                grid-template-columns: 1fr;
+                align-items: stretch;
+                gap: 8px;
+                padding: 8px;
+            }
+            .footer-actions {
+                width: 100%;
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 8px;
+            }
+            .footer-actions .btn { width: 100%; min-height: 36px; }
+            .total-zone {
+                width: 100%;
+                display: grid;
+                grid-template-columns: minmax(82px, .68fr) minmax(0, 1.32fr);
+                gap: 8px;
+                align-items: stretch;
+            }
+            .metric {
+                min-width: 0;
+                min-height: 58px;
+                padding: 7px 9px;
+            }
+            .metric span:first-child { font-size: 10px; }
+            .metric span:last-child { font-size: 22px; }
+            .total-card {
+                min-width: 0;
+                min-height: 58px;
+                padding: 8px 11px;
+            }
+            .total-card span { font-size: 10px; letter-spacing: .08em; }
+            .total-card div {
+                font-size: clamp(28px, 8.8vw, 40px);
+                line-height: .95;
+                white-space: nowrap;
+            }
+            .checkout-btn {
+                grid-column: 1 / -1;
+                width: 100%;
+                min-height: 52px;
+                padding: 0 14px;
+                font-size: 20px;
+            }
+        }
         @media (max-width: 760px) {
             body { overflow: hidden; }
             .topbar { align-items: stretch; flex-direction: column; gap: 12px; padding: 12px; }
@@ -855,8 +917,8 @@
             .sale-toolbar { padding: 10px; gap: 10px; }
             .barcode-line label { display: none; }
             .barcode-input { height: 42px; font-size: 16px; }
-            .sales-footer { flex-direction: column; align-items: stretch; padding: 10px; }
-            .footer-actions, .total-zone { width: 100%; justify-content: stretch; }
+            .sales-footer { align-items: stretch; padding: 8px; }
+            .footer-actions, .total-zone { width: 100%; }
             .footer-actions .btn { flex: 1; }
             .metric { min-width: 0; flex: 1; min-height: 54px; }
             .total-card { min-width: 0; flex: 1; min-height: 65px; }
@@ -876,6 +938,51 @@
             .account-side { border-right: 0; border-bottom: 1px solid #e2e8f0; }
             .modal-card { max-height: 96vh; }
             .movement-form { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 480px) {
+            .topbar { min-height: auto; gap: 8px; padding: 9px; }
+            .brand-mark { width: 36px; height: 36px; }
+            .brand h1 { font-size: 17px; }
+            .brand p { display: none; }
+            .topbar-tools { gap: 6px; }
+            .time-card { min-width: 92px; padding: 6px 8px; }
+            .time-card .clock { font-size: 16px; }
+            .time-card .date { font-size: 10px; }
+            .btn-exit { width: 38px; height: 36px; padding: 0; justify-content: center; }
+            .btn-exit span { display: none; }
+            .tabs { padding: 6px 7px 0; gap: 4px; }
+            .tab-btn { height: 34px; padding: 0 9px; font-size: 11px; gap: 6px; }
+            .workspace { padding: 6px; }
+            .sale-toolbar { padding: 7px; }
+            .toolbar-actions {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 6px;
+            }
+            .toolbar-actions .btn { min-height: 32px; padding: 0 8px; font-size: 11px; }
+            .sales-grid { grid-template-rows: minmax(0, 1fr) 96px; }
+            .frequent-title { height: 26px; }
+            .frequent-list { grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 6px; }
+            .quick-product { min-height: 58px; padding: 6px; }
+            .quick-product .name { font-size: 10px; -webkit-line-clamp: 2; }
+            .quick-product .amount { font-size: 11px; }
+            .sales-footer { gap: 6px; padding: 6px; }
+            .footer-actions { gap: 6px; }
+            .footer-actions .btn { min-height: 33px; font-size: 11px; }
+            .total-zone {
+                grid-template-columns: 74px minmax(0, 1fr);
+                gap: 6px;
+            }
+            .metric { min-height: 52px; padding: 6px 7px; }
+            .metric span:first-child { font-size: 9px; letter-spacing: .04em; }
+            .metric span:last-child { font-size: 20px; }
+            .total-card { min-height: 52px; padding: 7px 9px; }
+            .total-card span { font-size: 9px; letter-spacing: .06em; }
+            .total-card div { font-size: clamp(27px, 11vw, 37px); }
+            .checkout-btn { min-height: 48px; font-size: 18px; }
+            th, td { padding: 8px 7px; font-size: 11px; }
+            .qty { min-width: 86px; gap: 4px; }
+            .qty button { width: 26px; height: 26px; }
         }
     </style>
 </head>

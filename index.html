@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -456,6 +457,78 @@
             box-shadow: var(--shadow);
             padding: 14px;
         }
+        .section-panel.products-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            overflow: hidden;
+        }
+        .dept-folders {
+            flex-shrink: 0;
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 2px 2px 10px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .dept-folder {
+            min-width: 126px;
+            min-height: 56px;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            border: 1px solid #dbe3ee;
+            border-radius: var(--radius);
+            background: #fff;
+            color: #334155;
+            padding: 8px 10px;
+            text-align: left;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, .04);
+            transition: .15s ease;
+        }
+        .dept-folder:hover { border-color: #10b981; background: #ecfdf5; transform: translateY(-1px); }
+        .dept-folder.is-active {
+            color: #fff;
+            background: #047857;
+            border-color: #047857;
+            box-shadow: 0 8px 20px rgba(4, 120, 87, .18);
+        }
+        .dept-folder i { font-size: 20px; color: #059669; }
+        .dept-folder.is-active i { color: #a7f3d0; }
+        .dept-folder span {
+            display: block;
+            max-width: 92px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 12px;
+            font-weight: 950;
+        }
+        .dept-folder small {
+            display: block;
+            margin-top: 3px;
+            color: #94a3b8;
+            font-size: 10px;
+            font-weight: 900;
+        }
+        .dept-folder.is-active small { color: #d1fae5; }
+        .products-table-wrap {
+            flex: 1;
+            min-height: 0;
+            overflow: auto;
+        }
+        .products-folder-title {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            color: #475569;
+            font-size: 12px;
+            font-weight: 950;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+        }
         .search-box { position: relative; min-width: 220px; }
         .search-box i { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 12px; }
         .search-box input, .field, .select-field {
@@ -892,9 +965,10 @@
             .checkout-btn {
                 grid-column: 1 / -1;
                 width: 100%;
-                min-height: 52px;
+                min-height: 64px;
                 padding: 0 14px;
-                font-size: 20px;
+                font-size: 24px;
+                letter-spacing: .01em;
             }
         }
         @media (max-width: 760px) {
@@ -921,13 +995,15 @@
             .footer-actions .btn { flex: 1; }
             .metric { min-width: 0; flex: 1; min-height: 54px; }
             .total-card { min-width: 0; flex: 1; min-height: 65px; }
-            .checkout-btn { width: 100%; min-height: 56px; font-size: 20px; }
+            .checkout-btn { width: 100%; min-height: 66px; font-size: 24px; }
             .frequent-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
             th, td { padding: 9px 8px; font-size: 12px; }
             .hide-sm { display: none; }
             .section-head { align-items: stretch; flex-direction: column; }
             .section-actions, .search-box { width: 100%; }
             .section-actions .btn, .section-actions label.btn { flex: 1; }
+            .dept-folder { min-width: 112px; min-height: 50px; padding: 7px 9px; }
+            .dept-folder span { max-width: 78px; font-size: 11px; }
             .form-grid, .price-box, .payment-layout, .account-layout { grid-template-columns: 1fr; }
             .payment-main { padding-right: 0; border-right: 0; border-bottom: 1px solid #e2e8f0; padding-bottom: 16px; }
             .pay-methods { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -978,7 +1054,7 @@
             .total-card { min-height: 52px; padding: 7px 9px; }
             .total-card span { font-size: 9px; letter-spacing: .06em; }
             .total-card div { font-size: clamp(27px, 11vw, 37px); }
-            .checkout-btn { min-height: 48px; font-size: 18px; }
+            .checkout-btn { min-height: 62px; font-size: 23px; }
             th, td { padding: 8px 7px; font-size: 11px; }
             .qty { min-width: 86px; gap: 4px; }
             .qty button { width: 26px; height: 26px; }
@@ -1087,6 +1163,8 @@
                                 <th>Nombre</th>
                                 <th>WhatsApp</th>
                                 <th class="right">Deuda</th>
+                                <th class="right">Límite</th>
+                                <th class="right">Disponible</th>
                                 <th class="center">Acciones</th>
                             </tr>
                         </thead>
@@ -1111,20 +1189,27 @@
                         <button onclick="abrirModalProducto()" class="btn btn-green" type="button"><i class="fa-solid fa-plus"></i> Nuevo</button>
                     </div>
                 </div>
-                <div class="section-panel">
-                    <table class="min-w-[760px]">
-                        <thead>
-                            <tr>
-                                <th class="w-36">Código</th>
-                                <th>Descripción</th>
-                                <th>Depto.</th>
-                                <th class="right w-28">Costo</th>
-                                <th class="right w-28">Venta</th>
-                                <th class="center w-28">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="productos-tbody"></tbody>
-                    </table>
+                <div class="section-panel products-panel">
+                    <div id="dept-folders" class="dept-folders scrollbar-hide"></div>
+                    <div class="products-folder-title">
+                        <span id="productos-folder-label"><i class="fa-solid fa-folder-open mr-2"></i> Todos los departamentos</span>
+                        <span id="productos-folder-count">0 productos</span>
+                    </div>
+                    <div class="products-table-wrap">
+                        <table class="min-w-[760px]">
+                            <thead>
+                                <tr>
+                                    <th class="w-36">Código</th>
+                                    <th>Descripción</th>
+                                    <th>Depto.</th>
+                                    <th class="right w-28">Costo</th>
+                                    <th class="right w-28">Venta</th>
+                                    <th class="center w-28">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productos-tbody"></tbody>
+                        </table>
+                    </div>
                 </div>
             </section>
 
@@ -1405,6 +1490,11 @@
                         <label for="cliente-direccion">Dirección</label>
                         <input type="text" id="cliente-direccion" class="field">
                     </div>
+                    <div class="field-group wide">
+                        <label for="cliente-limite">Límite de Crédito ($)</label>
+                        <input type="number" id="cliente-limite" class="field mono font-black" placeholder="Ej. 500.00">
+                        <small>Déjalo vacío para no limitarlo. Usa 0 para dejarlo sin crédito disponible.</small>
+                    </div>
                 </div>
             </div>
             <div class="modal-foot">
@@ -1612,7 +1702,8 @@
             numeroTicketGlobal: 1,
             modalAbierto: false,
             metodoPagoActivo: 'efectivo',
-            ventasPausadas: []
+            ventasPausadas: [],
+            departamentoProductoActivo: '__todos'
         };
         let productoEditandoId = null;
         let isGranelLibre = false;
@@ -2032,6 +2123,18 @@
             return getCarrito().reduce((sum, item) => sum + ((Number(item.precio) || 0) * (Number(item.cantidad) || 0)), 0);
         }
 
+        function clienteTieneLimite(cliente) {
+            return cliente?.limiteCredito !== undefined && cliente?.limiteCredito !== null && cliente?.limiteCredito !== '';
+        }
+
+        function getLimiteCredito(cliente) {
+            return clienteTieneLimite(cliente) ? Math.max(0, Number(cliente.limiteCredito) || 0) : Infinity;
+        }
+
+        function creditoTexto(value) {
+            return Number.isFinite(value) ? money(value) : 'Sin límite';
+        }
+
         function openCheckout() {
             if (getCarrito().length === 0 || AppState.modalAbierto) return;
             const total = getTotales();
@@ -2041,7 +2144,12 @@
             const select = byId('select-cliente');
             select.innerHTML = DB.clientes.length === 0
                 ? `<option value="">No hay clientes registrados</option>`
-                : `<option value="">-- Selecciona un Cliente --</option>` + DB.clientes.map(c => `<option value="${esc(c.id)}">${esc(c.nombre)} (Deuda: ${money(c.deuda)})</option>`).join('');
+                : `<option value="">-- Selecciona un Cliente --</option>` + DB.clientes.map(c => {
+                    const limite = getLimiteCredito(c);
+                    const deuda = Number(c.deuda) || 0;
+                    const disponible = Number.isFinite(limite) ? limite - deuda : Infinity;
+                    return `<option value="${esc(c.id)}">${esc(c.nombre)} | Deuda: ${money(deuda)} | Disponible: ${creditoTexto(disponible)}</option>`;
+                }).join('');
 
             byId('inputPagaCon').value = '';
             byId('modal-cambio').innerText = '$0.00';
@@ -2150,6 +2258,12 @@
                 if (!clienteId) return alert('Selecciona un cliente de la lista para fiar. Si no hay, créalo primero en F2 Clientes.');
                 clienteSeleccionado = DB.clientes.find(c => c.id === clienteId);
                 if (clienteSeleccionado) {
+                    const limiteCredito = getLimiteCredito(clienteSeleccionado);
+                    const deudaActual = Number(clienteSeleccionado.deuda) || 0;
+                    const nuevaDeuda = deudaActual + total;
+                    if (Number.isFinite(limiteCredito) && nuevaDeuda > limiteCredito) {
+                        return alert(`Crédito no autorizado.\n\nCliente: ${clienteSeleccionado.nombre}\nLímite: ${money(limiteCredito)}\nDeuda actual: ${money(deudaActual)}\nEsta compra: ${money(total)}\nSe pasaría por: ${money(nuevaDeuda - limiteCredito)}`);
+                    }
                     clienteSeleccionado.deuda = (clienteSeleccionado.deuda || 0) + total;
                     if (!clienteSeleccionado.historial) clienteSeleccionado.historial = [];
                     clienteSeleccionado.historial.push({
@@ -2485,14 +2599,69 @@
             toast('Venta eliminada e inventario restaurado', 'fa-trash-can');
         }
 
+        function getDepartamentoProducto(producto) {
+            const depto = String(producto?.departamento || 'General').trim();
+            return depto || 'General';
+        }
+
+        function getDepartamentosProductos() {
+            const map = new Map();
+            DB.productos.forEach(p => {
+                const depto = getDepartamentoProducto(p);
+                map.set(depto, (map.get(depto) || 0) + 1);
+            });
+            return [...map.entries()].sort((a, b) => a[0].localeCompare(b[0], 'es')).map(([nombre, count]) => ({ nombre, count }));
+        }
+
+        function renderCarpetasDepartamentos() {
+            const cont = byId('dept-folders');
+            if (!cont) return;
+            const actual = AppState.departamentoProductoActivo || '__todos';
+            const carpetas = [{ nombre: '__todos', label: 'Todos', count: DB.productos.length }, ...getDepartamentosProductos().map(d => ({ nombre: d.nombre, label: d.nombre, count: d.count }))];
+            cont.innerHTML = carpetas.map(folder => {
+                const active = folder.nombre === actual;
+                const icon = folder.nombre === '__todos' ? 'fa-folder-tree' : 'fa-folder';
+                return `
+                    <button onclick="seleccionarDepartamentoProductos('${jsq(folder.nombre)}')" class="dept-folder ${active ? 'is-active' : ''}" type="button" title="${esc(folder.label)}">
+                        <i class="fa-solid ${icon}"></i>
+                        <span>${esc(folder.label)}<small>${folder.count} prod.</small></span>
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function seleccionarDepartamentoProductos(departamento) {
+            AppState.departamentoProductoActivo = departamento || '__todos';
+            renderProductos();
+        }
+
+        function getProductosFiltradosF3() {
+            const q = (byId('buscador-productos-f3')?.value || '').toLowerCase();
+            const departamento = AppState.departamentoProductoActivo || '__todos';
+            return DB.productos.filter(p => {
+                const depto = getDepartamentoProducto(p);
+                const matchesDepto = departamento === '__todos' || depto === departamento;
+                const matchesSearch = !q || String(p.desc || '').toLowerCase().includes(q) || String(p.id || '').toLowerCase().includes(q) || depto.toLowerCase().includes(q);
+                return matchesDepto && matchesSearch;
+            });
+        }
+
         function renderProductos() {
             const tbody = byId('productos-tbody');
             if (!tbody) return;
-            tbody.innerHTML = DB.productos.length ? DB.productos.map(p => `
+            renderCarpetasDepartamentos();
+            const productos = getProductosFiltradosF3();
+            const activeDepto = AppState.departamentoProductoActivo || '__todos';
+            const label = byId('productos-folder-label');
+            const count = byId('productos-folder-count');
+            if (label) label.innerHTML = `<i class="fa-solid ${activeDepto === '__todos' ? 'fa-folder-tree' : 'fa-folder-open'} mr-2"></i> ${activeDepto === '__todos' ? 'Todos los departamentos' : esc(activeDepto)}`;
+            if (count) count.innerText = `${productos.length} producto${productos.length === 1 ? '' : 's'}`;
+
+            tbody.innerHTML = productos.length ? productos.map(p => `
                 <tr>
                     <td class="mono muted strong">${esc(p.id)}</td>
                     <td class="strong">${esc(p.desc)} ${p.granel ? '<span class="pill pill-amber ml-1"><i class="fa-solid fa-scale-balanced"></i> Peso</span>' : ''}</td>
-                    <td><span class="pill pill-slate">${esc(p.departamento || 'General')}</span></td>
+                    <td><span class="pill pill-slate">${esc(getDepartamentoProducto(p))}</span></td>
                     <td class="right mono muted">${money(p.costo)}</td>
                     <td class="right mono price">${money(p.precio)}</td>
                     <td class="center">
@@ -2500,7 +2669,7 @@
                         <button onclick="borrarProducto('${jsq(p.id)}')" class="btn btn-red btn-icon ml-1" type="button" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>
-            `).join('') : `<tr><td colspan="6"><div class="empty-state"><div><i class="fa-solid fa-box-open"></i>No hay productos en el catálogo.</div></div></td></tr>`;
+            `).join('') : `<tr><td colspan="6"><div class="empty-state"><div><i class="fa-solid fa-box-open"></i>No hay productos en esta carpeta.</div></div></td></tr>`;
         }
 
         function abrirModalProducto() {
@@ -2677,10 +2846,7 @@
         }
 
         function filtrarTablaProductosF3() {
-            const q = byId('buscador-productos-f3').value.toLowerCase();
-            document.querySelectorAll('#productos-tbody tr').forEach(row => {
-                row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
-            });
+            renderProductos();
         }
 
         function abrirModalBuscar() {
@@ -2717,19 +2883,26 @@
         function renderClientes() {
             const tbody = byId('clientes-tbody');
             if (!tbody) return;
-            tbody.innerHTML = DB.clientes.length ? DB.clientes.map(c => `
-                <tr>
-                    <td class="mono muted strong">${esc(c.id)}</td>
-                    <td class="strong">${esc(c.nombre)}</td>
-                    <td class="mono muted"><i class="fa-brands fa-whatsapp text-green-600 mr-1"></i> ${esc(c.telefono || 'N/A')}</td>
-                    <td class="right mono strong ${(Number(c.deuda) || 0) > 0 ? 'danger' : 'muted'}">${money(c.deuda)}</td>
-                    <td class="center">
-                        <button onclick="abrirModalAbonar('${jsq(c.id)}')" class="btn btn-indigo" type="button"><i class="fa-solid fa-eye"></i> Ver / Abonar</button>
-                        <button onclick="abrirModalCliente('${jsq(c.id)}')" class="btn btn-soft btn-icon ml-1" type="button" title="Editar"><i class="fa-solid fa-pen text-blue-600"></i></button>
-                        <button onclick="borrarCliente('${jsq(c.id)}')" class="btn btn-red btn-icon ml-1" type="button" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
-                    </td>
-                </tr>
-            `).join('') : `<tr><td colspan="5"><div class="empty-state"><div><i class="fa-solid fa-address-book"></i>No hay clientes registrados en el directorio.</div></div></td></tr>`;
+            tbody.innerHTML = DB.clientes.length ? DB.clientes.map(c => {
+                const deuda = Number(c.deuda) || 0;
+                const limite = getLimiteCredito(c);
+                const disponible = Number.isFinite(limite) ? limite - deuda : Infinity;
+                return `
+                    <tr>
+                        <td class="mono muted strong">${esc(c.id)}</td>
+                        <td class="strong">${esc(c.nombre)}</td>
+                        <td class="mono muted"><i class="fa-brands fa-whatsapp text-green-600 mr-1"></i> ${esc(c.telefono || 'N/A')}</td>
+                        <td class="right mono strong ${deuda > 0 ? 'danger' : 'muted'}">${money(deuda)}</td>
+                        <td class="right mono strong">${creditoTexto(limite)}</td>
+                        <td class="right mono strong ${Number.isFinite(disponible) && disponible <= 0 ? 'danger' : 'ok'}">${creditoTexto(disponible)}</td>
+                        <td class="center">
+                            <button onclick="abrirModalAbonar('${jsq(c.id)}')" class="btn btn-indigo" type="button"><i class="fa-solid fa-eye"></i> Ver / Abonar</button>
+                            <button onclick="abrirModalCliente('${jsq(c.id)}')" class="btn btn-soft btn-icon ml-1" type="button" title="Editar"><i class="fa-solid fa-pen text-blue-600"></i></button>
+                            <button onclick="borrarCliente('${jsq(c.id)}')" class="btn btn-red btn-icon ml-1" type="button" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            }).join('') : `<tr><td colspan="7"><div class="empty-state"><div><i class="fa-solid fa-address-book"></i>No hay clientes registrados en el directorio.</div></div></td></tr>`;
         }
 
         function abrirModalCliente(id = null) {
@@ -2742,12 +2915,14 @@
                 byId('cliente-nombre').value = c.nombre || '';
                 byId('cliente-telefono').value = c.telefono || '';
                 byId('cliente-direccion').value = c.direccion || '';
+                byId('cliente-limite').value = clienteTieneLimite(c) ? Number(c.limiteCredito) || 0 : '';
             } else {
                 byId('titulo-modal-cliente').innerHTML = '<i class="fa-solid fa-user-plus mr-2"></i> Nuevo Cliente';
                 byId('cliente-id').value = 'C' + Date.now();
                 byId('cliente-nombre').value = '';
                 byId('cliente-telefono').value = '';
                 byId('cliente-direccion').value = '';
+                byId('cliente-limite').value = '';
             }
             setTimeout(() => byId('cliente-nombre')?.focus(), 100);
         }
@@ -2758,14 +2933,17 @@
             const nombre = byId('cliente-nombre').value.trim();
             const telefono = byId('cliente-telefono').value.trim();
             const direccion = byId('cliente-direccion').value.trim();
+            const limiteRaw = byId('cliente-limite').value.trim();
+            const limiteCredito = limiteRaw === '' ? null : Math.max(0, parseFloat(limiteRaw) || 0);
             if (!nombre) return alert('El nombre es obligatorio.');
             const index = DB.clientes.findIndex(c => c.id === id);
             if (index >= 0) {
                 DB.clientes[index].nombre = nombre;
                 DB.clientes[index].telefono = telefono;
                 DB.clientes[index].direccion = direccion;
+                DB.clientes[index].limiteCredito = limiteCredito;
             } else {
-                DB.clientes.push({ id, nombre, telefono, direccion, deuda: 0, historial: [] });
+                DB.clientes.push({ id, nombre, telefono, direccion, limiteCredito, deuda: 0, historial: [] });
             }
             guardarDB();
             renderClientes();

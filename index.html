@@ -1179,12 +1179,12 @@
             </div>
             <div class="topbar-tools">
                 <div id="nube-status" class="cloud-pill"><i class="fa-solid fa-cloud-arrow-down text-slate-400 fa-beat-fade"></i><span>Conectando...</span></div>
-                <button id="trabajador-status" onclick="abrirModalTrabajador()" class="worker-pill" type="button"><i class="fa-solid fa-user-tie"></i><span>Sin trabajador</span></button>
+                <button id="trabajador-status" onclick="window.showFirebaseLogin && window.showFirebaseLogin()" class="worker-pill" type="button" title="Cambiar usuario"><i class="fa-solid fa-user-tie"></i><span>Sin usuario</span></button>
                 <div class="time-card">
                     <div id="reloj-ventas" class="clock">00:00:00</div>
                     <div id="fecha-ventas" class="date"></div>
                 </div>
-                <button class="btn-exit" type="button"><i class="fa-solid fa-power-off"></i><span>Salir</span></button>
+                <button class="btn-exit" onclick="window.cerrarSesionBetty && window.cerrarSesionBetty()" type="button"><i class="fa-solid fa-power-off"></i><span>Salir</span></button>
             </div>
         </header>
 
@@ -1917,7 +1917,7 @@
     <div id="modal-login-firebase" class="modal">
         <div class="modal-card" style="--modal-w: 430px;">
             <div class="modal-head head-slate">
-                <span><i class="fa-solid fa-cloud-lock mr-2"></i> Acceso a la Nube</span>
+                <span><i class="fa-solid fa-user-lock mr-2"></i> Inicio de Sesion</span>
             </div>
             <div class="modal-body">
                 <div class="flex flex-col gap-4">
@@ -1928,10 +1928,13 @@
                     <div class="field-group">
                         <label for="firebase-login-password">Contraseña</label>
                         <input type="password" id="firebase-login-password" class="field font-black" placeholder="1234" autocomplete="current-password" onkeydown="if(event.key==='Enter') window.iniciarSesionBetty()">
-                        <small>Usuario inicial: usuario1 / 1234. La app crea la cuenta de nube al entrar.</small>
+                        <small>Usuario inicial: usuario1 / 1234. Los empleados se agregan desde Usuarios.</small>
                     </div>
                     <div id="firebase-login-error" class="hidden bg-red-50 border border-red-200 text-red-700 rounded-lg p-3 text-sm font-bold"></div>
-                    <button onclick="window.iniciarSesionBetty()" id="btn-login-firebase" class="btn btn-blue min-h-[48px]" type="button"><i class="fa-solid fa-right-to-bracket"></i> Entrar y Sincronizar</button>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <button onclick="abrirModalUsuarios()" id="btn-login-usuarios" class="btn btn-soft min-h-[48px]" type="button"><i class="fa-solid fa-users-gear"></i> Usuarios</button>
+                        <button onclick="window.iniciarSesionBetty()" id="btn-login-firebase" class="btn btn-blue min-h-[48px]" type="button"><i class="fa-solid fa-right-to-bracket"></i> Entrar</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1985,6 +1988,52 @@
             return changed;
         }
 
+        function normalizarUsuarioLogin(value) {
+            return String(value || '').trim().toLowerCase();
+        }
+
+        function buscarTrabajadorPorUsuario(usuario) {
+            asegurarTrabajadores();
+            const clean = normalizarUsuarioLogin(usuario);
+            return DB.trabajadores.find(t => normalizarUsuarioLogin(t.id) === clean) || null;
+        }
+
+        function aplicarTrabajadorActual(trabajador, persistir = true) {
+            if (!trabajador) return false;
+            AppState.trabajadorActual = { id: trabajador.id, nombre: trabajador.nombre, rol: trabajador.rol || 'Trabajador' };
+            if (persistir) localStorage.setItem(TRABAJADOR_KEY, trabajador.id);
+            actualizarTrabajadorStatus();
+            if (AppState.tabActual === 'caja') renderCaja();
+            return true;
+        }
+
+        function validarUsuarioInterno(usuario, password) {
+            const trabajador = buscarTrabajadorPorUsuario(usuario);
+            if (!trabajador) return { ok: false, message: 'Ese usuario no existe. Entra como administrador y agregalo en Usuarios.' };
+            if (String(trabajador.pin || '') !== String(password || '')) return { ok: false, message: 'Usuario o contrasena incorrectos.' };
+            return { ok: true, trabajador };
+        }
+
+        window.finalizarLoginInternoBetty = function(usuario, password) {
+            const result = validarUsuarioInterno(usuario, password);
+            if (!result.ok) return result;
+            aplicarTrabajadorActual(result.trabajador);
+            toast(`Sesion iniciada: ${result.trabajador.nombre}`, 'fa-user-check');
+            return result;
+        };
+
+        window.asegurarSesionInternaActiva = function() {
+            asegurarTrabajadores();
+            if (AppState.trabajadorActual && buscarTrabajadorPorUsuario(AppState.trabajadorActual.id)) {
+                actualizarTrabajadorStatus();
+                return true;
+            }
+            const trabajadorGuardado = localStorage.getItem(TRABAJADOR_KEY);
+            const guardado = trabajadorGuardado ? buscarTrabajadorPorUsuario(trabajadorGuardado) : null;
+            const trabajador = guardado || buscarTrabajadorPorUsuario('usuario1') || DB.trabajadores[0];
+            return aplicarTrabajadorActual(trabajador);
+        };
+
         function renderTrabajadoresLogin() {
             asegurarTrabajadores();
             const select = byId('trabajador-select');
@@ -1996,7 +2045,7 @@
         function actualizarTrabajadorStatus() {
             const status = byId('trabajador-status');
             if (!status) return;
-            const nombre = AppState.trabajadorActual?.nombre || 'Sin trabajador';
+            const nombre = AppState.trabajadorActual?.nombre || 'Sin usuario';
             status.innerHTML = `<i class="fa-solid fa-user-tie"></i><span>${esc(nombre)}</span>`;
             actualizarPermisosUI();
         }
@@ -2029,6 +2078,7 @@
             const isAdmin = esAdministrador();
             byId('btn-actividad-trabajadores')?.classList.toggle('hidden', !isAdmin);
             byId('btn-admin-usuarios')?.classList.toggle('hidden', !isAdmin && Boolean(AppState.trabajadorActual));
+            byId('btn-login-usuarios')?.classList.toggle('hidden', !isAdmin && Boolean(AppState.trabajadorActual));
         }
 
         function abrirModalTrabajador() {
@@ -2059,6 +2109,17 @@
             toast(`Turno iniciado: ${trabajador.nombre}`, 'fa-user-check');
         }
 
+        iniciarSesionTrabajador = function() {
+            asegurarTrabajadores();
+            const id = byId('trabajador-select')?.value;
+            const pin = byId('trabajador-pin')?.value || '';
+            const result = validarUsuarioInterno(id, pin);
+            if (!result.ok) return alert(result.message);
+            aplicarTrabajadorActual(result.trabajador);
+            cerrarModalTrabajador();
+            toast(`Sesion iniciada: ${result.trabajador.nombre}`, 'fa-user-check');
+        };
+
         function registrarTrabajador() {
             const nombre = prompt('Nombre del trabajador:');
             if (!nombre?.trim()) return;
@@ -2081,6 +2142,7 @@
         function abrirModalUsuarios() {
             if (!esAdministrador() && !pedirPinAdmin()) return;
             cerrarModalTrabajador();
+            byId('modal-login-firebase')?.classList.remove('flex');
             renderUsuariosAdmin();
             openModal('modal-usuarios');
         }
@@ -3927,6 +3989,8 @@
         const CLOUD_DEFAULT_PASSWORD = '1234';
         const CLOUD_DOMAIN = 'abarrotesbetty.app';
         const LEGACY_BETTY_EMAIL = 'betty@admin.com';
+        let pendingAppLogin = null;
+        let processingAuthUser = false;
 
         function cleanCloudUser(value) {
             return String(value || CLOUD_DEFAULT_USER).trim().toLowerCase();
@@ -4024,11 +4088,17 @@
             if (modal) modal.classList.add('flex');
             setCloudStatus(`<i class="fa-solid fa-cloud-lock text-amber-300"></i><span>Inicia sesión</span>`);
             setTimeout(() => passInput?.focus(), 80);
+            const state = window.BettyAppState;
+            if (state) state.modalAbierto = true;
         }
+        window.showFirebaseLogin = showFirebaseLogin;
 
         function hideFirebaseLogin() {
             document.getElementById('modal-login-firebase')?.classList.remove('flex');
             document.getElementById('firebase-login-error')?.classList.add('hidden');
+            const loginState = window.BettyAppState;
+            if (loginState) loginState.modalAbierto = Boolean(document.querySelector('.modal.flex'));
+            return;
             setTimeout(() => {
                 const state = window.BettyAppState || (typeof AppState !== 'undefined' ? AppState : null);
                 if (state && !state.trabajadorActual && typeof abrirModalTrabajador === 'function' && !document.querySelector('.modal.flex')) abrirModalTrabajador();
@@ -4088,6 +4158,112 @@
             }
         };
 
+        async function procesarUsuarioFirebase(user) {
+            if (!user || processingAuthUser) return;
+            processingAuthUser = true;
+            try {
+                if (!isAllowedCloudUser(user)) {
+                    await signOut(auth);
+                    showFirebaseLogin('Usa la cuenta principal de la tienda.');
+                    return;
+                }
+
+                setCloudStatus(`<i class="fa-solid fa-cloud-arrow-down text-amber-400 fa-bounce"></i><span>Sincronizando...</span>`);
+                await window.cargarDeNube(user);
+
+                let loginResult = { ok: true };
+                if (pendingAppLogin) {
+                    loginResult = window.finalizarLoginInternoBetty
+                        ? window.finalizarLoginInternoBetty(pendingAppLogin.usuario, pendingAppLogin.password)
+                        : { ok: false, message: 'No se pudo validar el usuario interno.' };
+                } else if (window.asegurarSesionInternaActiva) {
+                    loginResult = { ok: window.asegurarSesionInternaActiva() };
+                }
+
+                if (!loginResult?.ok) {
+                    pendingAppLogin = null;
+                    localStorage.removeItem('Trabajador_Actual_Betty');
+                    const state = window.BettyAppState;
+                    if (state) state.trabajadorActual = null;
+                    if (typeof actualizarTrabajadorStatus === 'function') actualizarTrabajadorStatus();
+                    await signOut(auth);
+                    showFirebaseLogin(loginResult?.message || 'Usuario o contrasena incorrectos.');
+                    return;
+                }
+
+                pendingAppLogin = null;
+                hideFirebaseLogin();
+                setCloudStatus(`<i class="fa-solid fa-cloud text-emerald-400"></i><span>${firebaseEmailToCloudUser(user.email) || 'Nube Activa'}</span>`);
+            } finally {
+                processingAuthUser = false;
+            }
+        }
+
+        window.iniciarSesionBetty = async function() {
+            const usuario = document.getElementById('firebase-login-email')?.value.trim() || CLOUD_DEFAULT_USER;
+            const password = document.getElementById('firebase-login-password')?.value || '';
+            const email = cloudUserToEmail(CLOUD_DEFAULT_USER);
+            const firebasePassword = cloudPasswordToFirebasePassword(CLOUD_DEFAULT_USER, CLOUD_DEFAULT_PASSWORD);
+            const btn = document.getElementById('btn-login-firebase');
+            const errorEl = document.getElementById('firebase-login-error');
+
+            if (!password) {
+                showFirebaseLogin('Escribe la contrasena.');
+                return;
+            }
+
+            pendingAppLogin = { usuario, password };
+
+            try {
+                if (btn) {
+                    btn.disabled = true;
+                    btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Entrando...`;
+                }
+                if (errorEl) errorEl.classList.add('hidden');
+                setCloudStatus(`<i class="fa-solid fa-cloud-arrow-up text-amber-400 fa-bounce"></i><span>Entrando...</span>`);
+                const credential = await signInWithEmailAndPassword(auth, email, firebasePassword);
+                await procesarUsuarioFirebase(credential.user);
+            } catch (error) {
+                const canCreateStoreUser = ['auth/user-not-found', 'auth/invalid-credential'].includes(error?.code);
+                if (canCreateStoreUser) {
+                    try {
+                        setCloudStatus(`<i class="fa-solid fa-user-plus text-amber-400 fa-bounce"></i><span>Creando usuario...</span>`);
+                        const credential = await createUserWithEmailAndPassword(auth, email, firebasePassword);
+                        await procesarUsuarioFirebase(credential.user);
+                    } catch (createError) {
+                        pendingAppLogin = null;
+                        console.error('Error creando usuario Betty:', createError);
+                        showFirebaseLogin(authMessage(createError));
+                    }
+                } else {
+                    pendingAppLogin = null;
+                    console.error('Error iniciando sesion:', error);
+                    showFirebaseLogin(authMessage(error));
+                }
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = `<i class="fa-solid fa-right-to-bracket"></i> Entrar`;
+                }
+            }
+        };
+
+        window.cerrarSesionBetty = async function() {
+            pendingAppLogin = null;
+            localStorage.removeItem('Trabajador_Actual_Betty');
+            const state = window.BettyAppState;
+            if (state) {
+                state.trabajadorActual = null;
+                state.modalAbierto = false;
+            }
+            if (typeof actualizarTrabajadorStatus === 'function') actualizarTrabajadorStatus();
+            try {
+                await signOut(auth);
+            } finally {
+                showFirebaseLogin('Sesion cerrada.');
+            }
+        };
+
         window.initFirebaseSync = async function() {
             try {
                 if (isCanvas && typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
@@ -4096,6 +4272,8 @@
 
                 onAuthStateChanged(auth, async (user) => {
                     if (user) {
+                        await procesarUsuarioFirebase(user);
+                        return;
                         if (!isAllowedCloudUser(user)) {
                             await signOut(auth);
                             showFirebaseLogin('Inicia sesión con usuario1 para usar la nube de la tienda.');

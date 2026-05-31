@@ -35,6 +35,7 @@
             margin: 0;
             color: var(--ink);
             min-height: 100vh;
+            min-height: 100dvh;
             overflow: hidden;
             font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             background:
@@ -47,7 +48,7 @@
         input[type=number]::-webkit-inner-spin-button,
         input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 
-        .app-shell { height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        .app-shell { height: 100vh; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
         .topbar {
             min-height: 76px;
             background: #111827;
@@ -92,6 +93,21 @@
             font-weight: 800;
             white-space: nowrap;
         }
+        .worker-pill {
+            min-height: 36px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 12px;
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            border-radius: var(--radius);
+            background: rgba(15, 23, 42, 0.72);
+            color: #dbeafe;
+            font-size: 12px;
+            font-weight: 900;
+            white-space: nowrap;
+        }
+        .worker-pill:hover { background: #1f2937; }
         .time-card { padding: 7px 12px; text-align: right; min-width: 132px; }
         .time-card .clock { color: #fff; font: 900 20px/1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .04em; }
         .time-card .date { color: #94a3b8; font-size: 11px; font-weight: 800; margin-top: 3px; }
@@ -400,6 +416,16 @@
         }
         .metric span:first-child { color: #64748b; font-size: 11px; font-weight: 950; text-transform: uppercase; letter-spacing: .06em; }
         .metric span:last-child { margin-top: 2px; font-size: 24px; line-height: 1; font-weight: 950; }
+        .metric.sales-subtotal {
+            min-width: 148px;
+            border-color: #bbf7d0;
+            background: #f0fdf4;
+        }
+        .metric.sales-subtotal span:first-child { color: #15803d; }
+        .metric.sales-subtotal span:last-child {
+            color: #166534;
+            font: 950 21px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+        }
         .total-card {
             min-width: 260px;
             min-height: 74px;
@@ -578,6 +604,40 @@
             grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr) minmax(310px, 0.85fr);
             gap: 14px;
         }
+        .payment-summary {
+            display: grid;
+            grid-template-columns: repeat(7, minmax(0, 1fr));
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+        .payment-total-card {
+            min-height: 70px;
+            border: 1px solid #dbe3ee;
+            border-radius: var(--radius-lg);
+            background: #f8fafc;
+            padding: 10px 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+        }
+        .payment-total-card strong {
+            color: #64748b;
+            font-size: 10px;
+            font-weight: 950;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+        }
+        .payment-total-card span {
+            color: #0f172a;
+            font: 950 20px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+        }
+        .payment-total-card.is-main {
+            background: #0f172a;
+            border-color: #0f172a;
+        }
+        .payment-total-card.is-main strong { color: #93c5fd; }
+        .payment-total-card.is-main span { color: #fff; }
         .subpanel {
             min-height: 0;
             display: flex;
@@ -695,6 +755,37 @@
             min-height: 72px;
             padding-top: 10px;
         }
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+        .detail-card {
+            border: 1px solid #dbe3ee;
+            border-radius: var(--radius);
+            background: #fff;
+            padding: 11px 12px;
+        }
+        .detail-card strong {
+            display: block;
+            color: #64748b;
+            font-size: 10px;
+            font-weight: 950;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            margin-bottom: 6px;
+        }
+        .detail-card span {
+            color: #0f172a;
+            font: 950 20px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+        }
+        .detail-card.is-main {
+            background: #0f172a;
+            border-color: #0f172a;
+        }
+        .detail-card.is-main strong { color: #93c5fd; }
+        .detail-card.is-main span { color: #fff; }
 
         .modal {
             position: fixed;
@@ -907,6 +998,9 @@
             .frequent-panel { border-left: 0; border-top: 1px solid #e2e8f0; }
             .frequent-list { grid-template-columns: repeat(4, minmax(0, 1fr)); }
             .caja-grid { grid-template-columns: 1fr; }
+            .payment-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .payment-total-card.is-main { grid-column: 1 / -1; }
+            .detail-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         }
         @media (max-width: 900px), (max-height: 560px) and (max-width: 1100px) {
             .workspace { padding: 8px; }
@@ -940,7 +1034,7 @@
             .total-zone {
                 width: 100%;
                 display: grid;
-                grid-template-columns: minmax(82px, .68fr) minmax(0, 1.32fr);
+                grid-template-columns: repeat(2, minmax(0, 1fr));
                 gap: 8px;
                 align-items: stretch;
             }
@@ -949,12 +1043,15 @@
                 min-height: 58px;
                 padding: 7px 9px;
             }
+            .metric.sales-subtotal { min-width: 0; }
             .metric span:first-child { font-size: 10px; }
             .metric span:last-child { font-size: 22px; }
             .total-card {
+                grid-column: 1 / -1;
                 min-width: 0;
                 min-height: 58px;
                 padding: 8px 11px;
+                text-align: center;
             }
             .total-card span { font-size: 10px; letter-spacing: .08em; }
             .total-card div {
@@ -982,6 +1079,8 @@
             .topbar-tools { width: 100%; justify-content: space-between; gap: 8px; }
             .cloud-pill { min-width: 40px; padding: 0 10px; }
             .cloud-pill span { display: none; }
+            .worker-pill { min-width: 40px; padding: 0 10px; }
+            .worker-pill span { display: none; }
             .time-card { min-width: 110px; }
             .btn-exit { padding: 0 12px; }
             .tabs { padding: 8px 10px 0; }
@@ -1013,6 +1112,9 @@
             .account-side { border-right: 0; border-bottom: 1px solid #e2e8f0; }
             .modal-card { max-height: 96vh; }
             .movement-form { grid-template-columns: 1fr; }
+            .payment-summary { grid-template-columns: 1fr; }
+            .payment-total-card { min-height: 58px; }
+            .detail-grid { grid-template-columns: 1fr; }
         }
         @media (max-width: 480px) {
             .topbar { min-height: auto; gap: 8px; padding: 9px; }
@@ -1035,29 +1137,33 @@
                 gap: 6px;
             }
             .toolbar-actions .btn { min-height: 32px; padding: 0 8px; font-size: 11px; }
-            .sales-grid { grid-template-rows: minmax(0, 1fr) 96px; }
+            .sales-grid { grid-template-rows: minmax(0, 1fr) 78px; }
             .frequent-title { height: 26px; }
             .frequent-list { grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 6px; }
-            .quick-product { min-height: 58px; padding: 6px; }
+            .quick-product { min-height: 50px; padding: 6px; }
             .quick-product .name { font-size: 10px; -webkit-line-clamp: 2; }
             .quick-product .amount { font-size: 11px; }
             .sales-footer { gap: 6px; padding: 6px; }
             .footer-actions { gap: 6px; }
             .footer-actions .btn { min-height: 33px; font-size: 11px; }
             .total-zone {
-                grid-template-columns: 74px minmax(0, 1fr);
+                grid-template-columns: repeat(2, minmax(0, 1fr));
                 gap: 6px;
             }
             .metric { min-height: 52px; padding: 6px 7px; }
             .metric span:first-child { font-size: 9px; letter-spacing: .04em; }
             .metric span:last-child { font-size: 20px; }
-            .total-card { min-height: 52px; padding: 7px 9px; }
+            .metric.sales-subtotal span:last-child { font-size: clamp(16px, 5vw, 20px); }
+            .total-card { grid-column: auto; min-height: 62px; padding: 7px 9px; display: flex; flex-direction: column; justify-content: center; }
             .total-card span { font-size: 9px; letter-spacing: .06em; }
-            .total-card div { font-size: clamp(27px, 11vw, 37px); }
-            .checkout-btn { min-height: 62px; font-size: 23px; }
+            .total-card div { font-size: clamp(22px, 8vw, 32px); white-space: nowrap; }
+            .checkout-btn { grid-column: auto; min-height: 62px; font-size: clamp(18px, 6vw, 22px); padding: 0 8px; }
             th, td { padding: 8px 7px; font-size: 11px; }
             .qty { min-width: 86px; gap: 4px; }
             .qty button { width: 26px; height: 26px; }
+            .table-wrap table { min-width: 540px !important; }
+            .section-panel { padding: 8px; }
+            .payment-total-card span { font-size: 18px; }
         }
     </style>
 </head>
@@ -1073,6 +1179,7 @@
             </div>
             <div class="topbar-tools">
                 <div id="nube-status" class="cloud-pill"><i class="fa-solid fa-cloud-arrow-down text-slate-400 fa-beat-fade"></i><span>Conectando...</span></div>
+                <button id="trabajador-status" onclick="abrirModalTrabajador()" class="worker-pill" type="button"><i class="fa-solid fa-user-tie"></i><span>Sin trabajador</span></button>
                 <div class="time-card">
                     <div id="reloj-ventas" class="clock">00:00:00</div>
                     <div id="fecha-ventas" class="date"></div>
@@ -1141,6 +1248,7 @@
                         </div>
                         <div class="total-zone">
                             <div class="metric"><span>Artículos</span><span id="lbl-total-items">0</span></div>
+                            <div class="metric sales-subtotal"><span>Vendido turno</span><span id="lbl-subtotal-turno">$0.00</span></div>
                             <div class="total-card"><span>Total a Pagar</span><div id="lbl-gran-total">$0.00</div></div>
                             <button onclick="openCheckout()" id="btn-cobrar-principal" disabled class="btn btn-green checkout-btn" type="button"><i class="fa-solid fa-hand-holding-dollar"></i> COBRAR</button>
                         </div>
@@ -1236,8 +1344,43 @@
             <section id="view-caja" class="view-section hidden">
                 <div class="section-head head-dark">
                     <h2><i class="fa-solid fa-cash-register"></i> Caja y Registro de Ventas</h2>
+                    <div class="section-actions">
+                        <button onclick="abrirModalActividadTrabajadores()" id="btn-actividad-trabajadores" class="btn btn-soft min-h-[38px]" type="button">
+                            <i class="fa-solid fa-user-clock"></i> Actividad
+                        </button>
+                    </div>
                 </div>
                 <div class="section-panel">
+                    <div class="payment-summary">
+                        <div class="payment-total-card is-main">
+                            <strong>Total del turno</strong>
+                            <span id="resumen-pago-total">$0.00</span>
+                        </div>
+                        <div class="payment-total-card">
+                            <strong>Efectivo</strong>
+                            <span id="resumen-pago-efectivo">$0.00</span>
+                        </div>
+                        <div class="payment-total-card">
+                            <strong>Tarjeta</strong>
+                            <span id="resumen-pago-tarjeta">$0.00</span>
+                        </div>
+                        <div class="payment-total-card">
+                            <strong>Transferencia</strong>
+                            <span id="resumen-pago-transferencia">$0.00</span>
+                        </div>
+                        <div class="payment-total-card">
+                            <strong>Crédito</strong>
+                            <span id="resumen-pago-credito">$0.00</span>
+                        </div>
+                        <div class="payment-total-card">
+                            <strong>Cajon esperado</strong>
+                            <span id="resumen-pago-cajon">$0.00</span>
+                        </div>
+                        <div class="payment-total-card">
+                            <strong>Tickets</strong>
+                            <span id="resumen-pago-tickets">0</span>
+                        </div>
+                    </div>
                     <div class="caja-grid">
                         <div class="subpanel">
                             <div class="subpanel-head">
@@ -1353,6 +1496,7 @@
                                                     <th>Fecha</th>
                                                     <th class="right">Contado</th>
                                                     <th class="right">Dif.</th>
+                                                    <th class="center">Ver</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="cortes-tbody"></tbody>
@@ -1378,6 +1522,36 @@
             </div>
             <div class="modal-foot">
                 <button onclick="cerrarDetalleVenta()" class="btn btn-blue" type="button">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-detalle-corte" class="modal">
+        <div class="modal-card" style="--modal-w: 920px;">
+            <div class="modal-head head-slate">
+                <span><i class="fa-solid fa-clipboard-check mr-2"></i> Detalle de Corte</span>
+                <button onclick="cerrarDetalleCorte()" type="button"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body bg-slate-50">
+                <div id="contenedor-detalle-corte"></div>
+            </div>
+            <div class="modal-foot">
+                <button onclick="cerrarDetalleCorte()" class="btn btn-blue" type="button">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-actividad-trabajador" class="modal">
+        <div class="modal-card" style="--modal-w: 920px;">
+            <div class="modal-head head-slate">
+                <span><i class="fa-solid fa-user-clock mr-2"></i> Actividad de Trabajadores</span>
+                <button onclick="cerrarModalActividadTrabajadores()" type="button"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body bg-slate-50">
+                <div id="contenedor-actividad-trabajadores"></div>
+            </div>
+            <div class="modal-foot">
+                <button onclick="cerrarModalActividadTrabajadores()" class="btn btn-blue" type="button">Cerrar</button>
             </div>
         </div>
     </div>
@@ -1668,6 +1842,78 @@
         </div>
     </div>
 
+    <div id="modal-trabajador" class="modal">
+        <div class="modal-card" style="--modal-w: 430px;">
+            <div class="modal-head head-slate">
+                <span><i class="fa-solid fa-user-tie mr-2"></i> Inicio de Trabajador</span>
+            </div>
+            <div class="modal-body">
+                <div class="flex flex-col gap-4">
+                    <div class="field-group">
+                        <label for="trabajador-select">Trabajador</label>
+                        <select id="trabajador-select" class="select-field font-black"></select>
+                    </div>
+                    <div class="field-group">
+                        <label for="trabajador-pin">PIN</label>
+                        <input type="password" inputmode="numeric" id="trabajador-pin" class="field mono font-black" placeholder="PIN" onkeydown="if(event.key==='Enter') iniciarSesionTrabajador()">
+                        <small>El trabajador quedará guardado en ventas, movimientos y cortes.</small>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                        <button onclick="registrarTrabajador()" class="btn btn-soft min-h-[44px]" type="button"><i class="fa-solid fa-user-plus"></i> Nuevo</button>
+                        <button onclick="abrirModalUsuarios()" id="btn-admin-usuarios" class="btn btn-soft min-h-[44px]" type="button"><i class="fa-solid fa-key"></i> Contrasenas</button>
+                        <button onclick="iniciarSesionTrabajador()" class="btn btn-blue min-h-[44px]" type="button"><i class="fa-solid fa-right-to-bracket"></i> Entrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-usuarios" class="modal">
+        <div class="modal-card" style="--modal-w: 560px;">
+            <div class="modal-head head-slate">
+                <span><i class="fa-solid fa-key mr-2"></i> Usuarios y Contrasenas</span>
+                <button onclick="cerrarModalUsuarios()" type="button"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="flex flex-col gap-4">
+                    <div class="field-group">
+                        <label for="usuario-admin-select">Usuario existente</label>
+                        <select id="usuario-admin-select" class="select-field font-black" onchange="cargarUsuarioAdmin(this.value)"></select>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div class="field-group">
+                            <label for="usuario-admin-id">Usuario</label>
+                            <input type="text" id="usuario-admin-id" class="field mono font-black" placeholder="usuario1">
+                        </div>
+                        <div class="field-group">
+                            <label for="usuario-admin-pin">Contrasena / PIN</label>
+                            <input type="text" id="usuario-admin-pin" class="field mono font-black" placeholder="1234">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div class="field-group">
+                            <label for="usuario-admin-nombre">Nombre visible</label>
+                            <input type="text" id="usuario-admin-nombre" class="field font-black" placeholder="Nombre del trabajador">
+                        </div>
+                        <div class="field-group">
+                            <label for="usuario-admin-rol">Rol</label>
+                            <select id="usuario-admin-rol" class="select-field font-black">
+                                <option value="Administrador">Administrador</option>
+                                <option value="Trabajador">Trabajador</option>
+                            </select>
+                        </div>
+                    </div>
+                    <small>Estas contrasenas son internas de la tienda. No necesitas entrar a Firebase para cambiarlas.</small>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                        <button onclick="nuevoUsuarioAdmin()" class="btn btn-soft min-h-[44px]" type="button"><i class="fa-solid fa-plus"></i> Nuevo</button>
+                        <button onclick="guardarUsuarioAdmin()" class="btn btn-blue min-h-[44px]" type="button"><i class="fa-solid fa-floppy-disk"></i> Guardar</button>
+                        <button onclick="eliminarUsuarioAdmin()" class="btn btn-red min-h-[44px]" type="button"><i class="fa-solid fa-trash"></i> Eliminar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="modal-login-firebase" class="modal">
         <div class="modal-card" style="--modal-w: 430px;">
             <div class="modal-head head-slate">
@@ -1676,13 +1922,13 @@
             <div class="modal-body">
                 <div class="flex flex-col gap-4">
                     <div class="field-group">
-                        <label for="firebase-login-email">Usuario Firebase</label>
-                        <input type="email" id="firebase-login-email" class="field font-black" value="betty@admin.com" autocomplete="username">
+                        <label for="firebase-login-email">Usuario</label>
+                        <input type="text" id="firebase-login-email" class="field font-black" value="usuario1" autocomplete="username">
                     </div>
                     <div class="field-group">
                         <label for="firebase-login-password">Contraseña</label>
-                        <input type="password" id="firebase-login-password" class="field font-black" placeholder="betty1234" autocomplete="current-password" onkeydown="if(event.key==='Enter') window.iniciarSesionBetty()">
-                        <small>Los datos se guardarán en la cuenta que inicies aquí.</small>
+                        <input type="password" id="firebase-login-password" class="field font-black" placeholder="1234" autocomplete="current-password" onkeydown="if(event.key==='Enter') window.iniciarSesionBetty()">
+                        <small>Usuario inicial: usuario1 / 1234. La app crea la cuenta de nube al entrar.</small>
                     </div>
                     <div id="firebase-login-error" class="hidden bg-red-50 border border-red-200 text-red-700 rounded-lg p-3 text-sm font-bold"></div>
                     <button onclick="window.iniciarSesionBetty()" id="btn-login-firebase" class="btn btn-blue min-h-[48px]" type="button"><i class="fa-solid fa-right-to-bracket"></i> Entrar y Sincronizar</button>
@@ -1694,7 +1940,7 @@
     <div id="toast" class="toast"></div>
 
     <script>
-        let DB = { productos: [], clientes: [], ventas: [], movimientos: [], cortes: [] };
+        let DB = { productos: [], clientes: [], ventas: [], movimientos: [], cortes: [], trabajadores: [], auditoria: [] };
         let AppState = {
             tabActual: 'ventas',
             tickets: [{ id: 1, carrito: [] }],
@@ -1703,12 +1949,16 @@
             modalAbierto: false,
             metodoPagoActivo: 'efectivo',
             ventasPausadas: [],
-            departamentoProductoActivo: '__todos'
+            departamentoProductoActivo: '__todos',
+            trabajadorActual: null
         };
         let productoEditandoId = null;
         let isGranelLibre = false;
+        let usuarioEditandoId = null;
+        window.BettyAppState = AppState;
         const DB_LOCAL_KEY = 'DB_Abarrotes_Betty';
         const DB_UPDATED_KEY = 'DB_Abarrotes_Betty_UpdatedAt';
+        const TRABAJADOR_KEY = 'Trabajador_Actual_Betty';
 
         const money = (value) => `$${(Number(value) || 0).toFixed(2)}`;
         const esc = (value) => String(value ?? '').replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[ch]));
@@ -1723,6 +1973,218 @@
             el.classList.add('show');
             clearTimeout(toast.timer);
             toast.timer = setTimeout(() => el.classList.remove('show'), 2600);
+        }
+
+        function asegurarTrabajadores() {
+            let changed = false;
+            if (!Array.isArray(DB.trabajadores)) DB.trabajadores = [];
+            if (!DB.trabajadores.some(t => t.id === 'usuario1')) {
+                DB.trabajadores.unshift({ id: 'usuario1', nombre: 'Usuario 1', pin: '1234', rol: 'Administrador' });
+                changed = true;
+            }
+            return changed;
+        }
+
+        function renderTrabajadoresLogin() {
+            asegurarTrabajadores();
+            const select = byId('trabajador-select');
+            if (!select) return;
+            select.innerHTML = DB.trabajadores.map(t => `<option value="${esc(t.id)}">${esc(t.nombre)} (${esc(t.rol || 'Trabajador')})</option>`).join('');
+            if (AppState.trabajadorActual) select.value = AppState.trabajadorActual.id;
+        }
+
+        function actualizarTrabajadorStatus() {
+            const status = byId('trabajador-status');
+            if (!status) return;
+            const nombre = AppState.trabajadorActual?.nombre || 'Sin trabajador';
+            status.innerHTML = `<i class="fa-solid fa-user-tie"></i><span>${esc(nombre)}</span>`;
+            actualizarPermisosUI();
+        }
+
+        function esAdministrador() {
+            return String(AppState.trabajadorActual?.rol || '').toLowerCase().includes('admin');
+        }
+
+        function validarPinAdmin(pin) {
+            return DB.trabajadores.some(t => String(t.rol || '').toLowerCase().includes('admin') && String(t.pin || '') === String(pin || ''));
+        }
+
+        function pedirPinAdmin() {
+            const pin = prompt('PIN de Administrador:');
+            if (pin === null) return false;
+            if (!validarPinAdmin(pin)) {
+                alert('PIN de administrador incorrecto.');
+                return false;
+            }
+            return true;
+        }
+
+        function exigirAdministrador(mensaje = 'Esta accion solo esta disponible para Administrador.') {
+            if (esAdministrador()) return true;
+            alert(mensaje);
+            return false;
+        }
+
+        function actualizarPermisosUI() {
+            const isAdmin = esAdministrador();
+            byId('btn-actividad-trabajadores')?.classList.toggle('hidden', !isAdmin);
+            byId('btn-admin-usuarios')?.classList.toggle('hidden', !isAdmin && Boolean(AppState.trabajadorActual));
+        }
+
+        function abrirModalTrabajador() {
+            renderTrabajadoresLogin();
+            byId('trabajador-pin').value = '';
+            byId('modal-trabajador').classList.add('flex');
+            AppState.modalAbierto = true;
+            setTimeout(() => byId('trabajador-pin')?.focus(), 80);
+        }
+
+        function cerrarModalTrabajador() {
+            byId('modal-trabajador')?.classList.remove('flex');
+            AppState.modalAbierto = Boolean(document.querySelector('.modal.flex'));
+        }
+
+        function iniciarSesionTrabajador() {
+            asegurarTrabajadores();
+            const id = byId('trabajador-select')?.value;
+            const pin = byId('trabajador-pin')?.value || '';
+            const trabajador = DB.trabajadores.find(t => t.id === id);
+            if (!trabajador) return alert('Selecciona un trabajador válido.');
+            if (String(trabajador.pin || '') !== pin) return alert('PIN incorrecto.');
+            AppState.trabajadorActual = { id: trabajador.id, nombre: trabajador.nombre, rol: trabajador.rol || 'Trabajador' };
+            localStorage.setItem(TRABAJADOR_KEY, trabajador.id);
+            actualizarTrabajadorStatus();
+            if (AppState.tabActual === 'caja') renderCaja();
+            cerrarModalTrabajador();
+            toast(`Turno iniciado: ${trabajador.nombre}`, 'fa-user-check');
+        }
+
+        function registrarTrabajador() {
+            const nombre = prompt('Nombre del trabajador:');
+            if (!nombre?.trim()) return;
+            const pin = prompt('PIN del trabajador:');
+            if (!pin?.trim()) return;
+            const trabajador = {
+                id: 'T' + Date.now(),
+                nombre: nombre.trim(),
+                pin: pin.trim(),
+                rol: 'Trabajador'
+            };
+            DB.trabajadores.push(trabajador);
+            guardarDB();
+            renderTrabajadoresLogin();
+            byId('trabajador-select').value = trabajador.id;
+            byId('trabajador-pin').value = '';
+            toast('Trabajador registrado', 'fa-user-plus');
+        }
+
+        function abrirModalUsuarios() {
+            if (!esAdministrador() && !pedirPinAdmin()) return;
+            cerrarModalTrabajador();
+            renderUsuariosAdmin();
+            openModal('modal-usuarios');
+        }
+
+        function cerrarModalUsuarios() { closeModal('modal-usuarios'); }
+
+        function renderUsuariosAdmin() {
+            asegurarTrabajadores();
+            const select = byId('usuario-admin-select');
+            if (!select) return;
+            select.innerHTML = DB.trabajadores.map(t => `<option value="${esc(t.id)}">${esc(t.id)} - ${esc(t.nombre)}</option>`).join('');
+            const selectedId = usuarioEditandoId || AppState.trabajadorActual?.id || DB.trabajadores[0]?.id;
+            if (selectedId) select.value = selectedId;
+            cargarUsuarioAdmin(select.value);
+        }
+
+        function cargarUsuarioAdmin(id) {
+            const user = DB.trabajadores.find(t => t.id === id) || DB.trabajadores[0];
+            if (!user) return nuevoUsuarioAdmin();
+            usuarioEditandoId = user.id;
+            byId('usuario-admin-id').value = user.id || '';
+            byId('usuario-admin-nombre').value = user.nombre || '';
+            byId('usuario-admin-pin').value = user.pin || '';
+            byId('usuario-admin-rol').value = user.rol || 'Trabajador';
+        }
+
+        function nuevoUsuarioAdmin() {
+            usuarioEditandoId = null;
+            byId('usuario-admin-select').value = '';
+            byId('usuario-admin-id').value = '';
+            byId('usuario-admin-nombre').value = '';
+            byId('usuario-admin-pin').value = '';
+            byId('usuario-admin-rol').value = 'Trabajador';
+            setTimeout(() => byId('usuario-admin-id')?.focus(), 50);
+        }
+
+        function guardarUsuarioAdmin() {
+            const id = byId('usuario-admin-id').value.trim();
+            const nombre = byId('usuario-admin-nombre').value.trim() || id;
+            const pin = byId('usuario-admin-pin').value.trim();
+            const rol = byId('usuario-admin-rol').value || 'Trabajador';
+            if (!id) return alert('Escribe un usuario.');
+            if (!pin) return alert('Escribe una contraseña o PIN.');
+
+            const existe = DB.trabajadores.some(t => t.id === id && t.id !== usuarioEditandoId);
+            if (existe) return alert('Ese usuario ya existe.');
+
+            if (usuarioEditandoId) {
+                const idx = DB.trabajadores.findIndex(t => t.id === usuarioEditandoId);
+                if (idx >= 0) DB.trabajadores[idx] = { ...DB.trabajadores[idx], id, nombre, pin, rol };
+                if (AppState.trabajadorActual?.id === usuarioEditandoId) {
+                    AppState.trabajadorActual = { id, nombre, rol };
+                    localStorage.setItem(TRABAJADOR_KEY, id);
+                    actualizarTrabajadorStatus();
+                }
+            } else {
+                DB.trabajadores.push({ id, nombre, pin, rol });
+            }
+
+            usuarioEditandoId = id;
+            guardarDB();
+            renderTrabajadoresLogin();
+            renderUsuariosAdmin();
+            toast('Usuario guardado', 'fa-key');
+        }
+
+        function eliminarUsuarioAdmin() {
+            const id = usuarioEditandoId || byId('usuario-admin-select')?.value;
+            if (!id) return;
+            if (DB.trabajadores.length <= 1) return alert('Debe quedar al menos un usuario.');
+            const user = DB.trabajadores.find(t => t.id === id);
+            if (!user) return;
+            if (!confirm(`¿Eliminar el usuario ${user.nombre}?`)) return;
+            DB.trabajadores = DB.trabajadores.filter(t => t.id !== id);
+            if (AppState.trabajadorActual?.id === id) {
+                AppState.trabajadorActual = null;
+                localStorage.removeItem(TRABAJADOR_KEY);
+                actualizarTrabajadorStatus();
+            }
+            usuarioEditandoId = DB.trabajadores[0]?.id || null;
+            guardarDB();
+            renderTrabajadoresLogin();
+            renderUsuariosAdmin();
+            toast('Usuario eliminado', 'fa-trash-can');
+        }
+
+        function getTrabajadorActual() {
+            return AppState.trabajadorActual || { id: 'sin-trabajador', nombre: 'Sin trabajador', rol: 'Sin turno' };
+        }
+
+        function registrarAuditoria(tipo, detalle, extra = {}) {
+            if (!Array.isArray(DB.auditoria)) DB.auditoria = [];
+            const trabajador = getTrabajadorActual();
+            DB.auditoria.push({
+                id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+                fecha: new Date().toISOString(),
+                tipo,
+                detalle,
+                trabajadorId: trabajador.id,
+                trabajadorNombre: trabajador.nombre,
+                trabajadorRol: trabajador.rol,
+                ...extra
+            });
+            if (DB.auditoria.length > 800) DB.auditoria = DB.auditoria.slice(-800);
         }
 
         function guardarDB() {
@@ -1742,17 +2204,22 @@
                     DB.ventas = parsed.ventas || [];
                     DB.movimientos = parsed.movimientos || [];
                     DB.cortes = parsed.cortes || [];
+                    DB.trabajadores = parsed.trabajadores || [];
+                    DB.auditoria = parsed.auditoria || [];
                 } catch (error) {
                     console.error('No se pudo leer la base local:', error);
-                    DB = { productos: [], clientes: [], ventas: [], movimientos: [], cortes: [] };
+                    DB = { productos: [], clientes: [], ventas: [], movimientos: [], cortes: [], trabajadores: [], auditoria: [] };
                 }
             } else {
                 DB.productos = [];
-                guardarDB();
             }
 
             DB.clientes.forEach(c => { if (!c.historial) c.historial = []; });
             DB.cortes = DB.cortes || [];
+            DB.trabajadores = DB.trabajadores || [];
+            DB.auditoria = DB.auditoria || [];
+            const trabajadoresCambiaron = asegurarTrabajadores();
+            if (trabajadoresCambiaron) localStorage.setItem(DB_LOCAL_KEY, JSON.stringify(DB));
 
             const num = localStorage.getItem('Ticket_Actual_Betty');
             if (num) AppState.numeroTicketGlobal = parseInt(num, 10) || 1;
@@ -1761,6 +2228,12 @@
             if (pausadas) {
                 try { AppState.ventasPausadas = JSON.parse(pausadas) || []; }
                 catch { AppState.ventasPausadas = []; }
+            }
+
+            const trabajadorGuardado = localStorage.getItem(TRABAJADOR_KEY);
+            if (trabajadorGuardado) {
+                const trabajador = DB.trabajadores.find(t => t.id === trabajadorGuardado);
+                if (trabajador) AppState.trabajadorActual = { id: trabajador.id, nombre: trabajador.nombre, rol: trabajador.rol || 'Trabajador' };
             }
         }
 
@@ -1771,8 +2244,16 @@
             DB.ventas = dataNube.ventas || [];
             DB.movimientos = dataNube.movimientos || [];
             DB.cortes = dataNube.cortes || [];
+            DB.trabajadores = dataNube.trabajadores || [];
+            DB.auditoria = dataNube.auditoria || [];
+            const trabajadoresCambiaron = asegurarTrabajadores();
+            const trabajadorGuardado = localStorage.getItem(TRABAJADOR_KEY);
+            const trabajador = DB.trabajadores.find(t => t.id === trabajadorGuardado);
+            AppState.trabajadorActual = trabajador ? { id: trabajador.id, nombre: trabajador.nombre, rol: trabajador.rol || 'Trabajador' } : null;
             localStorage.setItem(DB_LOCAL_KEY, JSON.stringify(DB));
             if (meta?.updatedAt) localStorage.setItem(DB_UPDATED_KEY, meta.updatedAt);
+            if (trabajadoresCambiaron) setTimeout(() => guardarDB(), 0);
+            actualizarTrabajadorStatus();
             actualizarInterfazVentas();
             renderProductosFrecuentes();
             if (AppState.tabActual === 'productos') renderProductos();
@@ -1861,7 +2342,7 @@
             if (e.key === 'F12' && AppState.tabActual === 'ventas' && !AppState.modalAbierto && getCarrito().length > 0) { e.preventDefault(); openCheckout(); }
             if (e.key === 'Escape') {
                 cerrarModalBuscar(); cerrarModalProducto(); closeCheckout(); cerrarModalGranel(); cerrarModalArtComun();
-                cerrarModalCliente(); cerrarModalAbonar(); cerrarModalEspera(); cerrarDetalleVenta();
+                cerrarModalCliente(); cerrarModalAbonar(); cerrarModalEspera(); cerrarDetalleVenta(); cerrarDetalleCorte(); cerrarModalTrabajador(); cerrarModalUsuarios();
             }
         });
 
@@ -1951,6 +2432,7 @@
 
             byId('lbl-gran-total').innerText = money(total);
             byId('lbl-total-items').innerText = items;
+            actualizarSubtotalTurnoVentas();
             const btnCobrar = byId('btn-cobrar-principal');
             if (btnCobrar) btnCobrar.disabled = c.length === 0;
 
@@ -2231,6 +2713,7 @@
             let pagaCon = total;
             let metodoFinal = AppState.metodoPagoActivo;
             let cambio = 0;
+            const trabajador = getTrabajadorActual();
 
             if (AppState.metodoPagoActivo === 'efectivo') {
                 pagaCon = parseFloat(byId('inputPagaCon').value) || 0;
@@ -2272,7 +2755,9 @@
                         tipo: 'compra',
                         total,
                         ticket: AppState.numeroTicketGlobal,
-                        articulos: [...getCarrito()]
+                        articulos: [...getCarrito()],
+                        trabajadorId: trabajador.id,
+                        trabajadorNombre: trabajador.nombre
                     });
                 }
             }
@@ -2294,8 +2779,14 @@
                 metodo: metodoFinal,
                 recibido: pagaCon,
                 cambio,
-                articulos: carritoActual
+                articulos: carritoActual,
+                trabajadorId: trabajador.id,
+                trabajadorNombre: trabajador.nombre,
+                clienteId: clienteSeleccionado?.id || null,
+                clienteNombre: clienteSeleccionado?.nombre || null,
+                clienteTelefono: clienteSeleccionado?.telefono || null
             });
+            registrarAuditoria('venta', `Ticket #${ticketActualStr} cobrado`, { monto: total, ref: ticketActualStr, metodo: metodoFinal });
 
             getCarrito().length = 0;
             AppState.numeroTicketGlobal++;
@@ -2316,7 +2807,17 @@
             const monto = parseFloat(byId('input-mov-monto').value);
             const concepto = byId('input-mov-concepto').value.trim();
             if (!monto || monto <= 0 || !concepto) return alert('Por favor ingresa un monto y un concepto válidos.');
-            DB.movimientos.push({ id: Date.now(), fecha: new Date().toISOString(), tipo, monto, concepto });
+            const trabajador = getTrabajadorActual();
+            DB.movimientos.push({
+                id: Date.now(),
+                fecha: new Date().toISOString(),
+                tipo,
+                monto,
+                concepto,
+                trabajadorId: trabajador.id,
+                trabajadorNombre: trabajador.nombre
+            });
+            registrarAuditoria('movimiento', `${tipo}: ${concepto}`, { monto, ref: tipo });
             byId('input-mov-monto').value = '';
             byId('input-mov-concepto').value = '';
             guardarDB();
@@ -2359,6 +2860,45 @@
             return desglose;
         }
 
+        function calcularTotalesPagoCaja() {
+            const resumen = { total: 0, efectivo: 0, tarjeta: 0, transferencia: 0, credito: 0 };
+            DB.ventas.forEach(venta => {
+                const desglose = desglosarVentaCaja(venta);
+                resumen.total += Number(venta.total) || 0;
+                resumen.efectivo += desglose.efectivo;
+                resumen.tarjeta += desglose.tarjeta;
+                resumen.transferencia += desglose.transferencia;
+                resumen.credito += desglose.credito;
+            });
+            return resumen;
+        }
+
+        function renderResumenPagosCaja() {
+            const resumen = calcularResumenCorte();
+            const values = {
+                'resumen-pago-total': resumen.totalVentas,
+                'resumen-pago-efectivo': resumen.efectivo,
+                'resumen-pago-tarjeta': resumen.tarjeta,
+                'resumen-pago-transferencia': resumen.transferencia,
+                'resumen-pago-credito': resumen.credito,
+                'resumen-pago-cajon': resumen.efectivoEsperado
+            };
+            Object.entries(values).forEach(([id, value]) => {
+                const el = byId(id);
+                if (el) el.innerText = money(value);
+            });
+            const tickets = byId('resumen-pago-tickets');
+            if (tickets) tickets.innerText = resumen.ventasCount;
+            actualizarSubtotalTurnoVentas(resumen);
+        }
+
+        function actualizarSubtotalTurnoVentas(resumenActual = null) {
+            const el = byId('lbl-subtotal-turno');
+            if (!el) return;
+            const resumen = resumenActual || calcularResumenCorte();
+            el.innerText = money(resumen.totalVentas);
+        }
+
         function calcularResumenCorte() {
             const ultimoCorte = getUltimoCorte();
             const desde = ultimoCorte ? new Date(ultimoCorte.hasta || ultimoCorte.fecha) : null;
@@ -2398,6 +2938,22 @@
             return resumen;
         }
 
+        function estaEnRangoCorte(fecha, desdeISO, hastaISO) {
+            const fechaItem = new Date(fecha);
+            const desde = desdeISO ? new Date(desdeISO) : null;
+            const hasta = hastaISO ? new Date(hastaISO) : new Date();
+            return (!desde || fechaItem > desde) && fechaItem <= hasta;
+        }
+
+        function obtenerDatosPeriodoCorte(corte) {
+            const desde = corte.desde || corte.resumen?.desdeISO || null;
+            const hasta = corte.hasta || corte.resumen?.hastaISO || corte.fecha || new Date().toISOString();
+            return {
+                ventas: Array.isArray(corte.ventas) ? corte.ventas : DB.ventas.filter(v => estaEnRangoCorte(v.fecha, desde, hasta)),
+                movimientos: Array.isArray(corte.movimientos) ? corte.movimientos : DB.movimientos.filter(m => estaEnRangoCorte(m.fecha, desde, hasta))
+            };
+        }
+
         function renderCorteCaja() {
             const resumen = calcularResumenCorte();
             const desde = resumen.desdeISO ? new Date(resumen.desdeISO) : null;
@@ -2430,12 +2986,13 @@
                     const diferencia = Number(corte.diferencia) || 0;
                     return `
                         <tr>
-                            <td><span class="strong">${f.toLocaleDateString('es-MX')}</span><span class="text-[11px] text-slate-400 block">${f.toLocaleTimeString('es-MX', { hour12: false })}</span></td>
+                            <td><span class="strong">${f.toLocaleDateString('es-MX')}</span><span class="text-[11px] text-slate-400 block">${f.toLocaleTimeString('es-MX', { hour12: false })}</span>${corte.trabajadorNombre ? `<span class="text-[11px] text-slate-400 block">${esc(corte.trabajadorNombre)}</span>` : ''}</td>
                             <td class="right mono strong">${money(corte.contado)}</td>
                             <td class="right mono strong ${Math.abs(diferencia) < 0.01 ? 'ok' : 'danger'}">${money(diferencia)}</td>
+                            <td class="center"><button onclick="verDetalleCorte('${jsq(corte.id || corte.fecha)}')" class="btn btn-soft btn-icon" type="button" title="Ver Corte"><i class="fa-solid fa-eye text-indigo-600"></i></button></td>
                         </tr>
                     `;
-                }).join('') : `<tr><td colspan="3"><div class="empty-state min-h-[120px]"><div><i class="fa-solid fa-clipboard-list"></i>Sin cortes guardados.</div></div></td></tr>`;
+                }).join('') : `<tr><td colspan="4"><div class="empty-state min-h-[120px]"><div><i class="fa-solid fa-clipboard-list"></i>Sin cortes guardados.</div></div></td></tr>`;
             }
 
             actualizarDiferenciaCorte(resumen);
@@ -2464,8 +3021,12 @@
             if (resumen.ventasCount === 0 && resumen.movimientosCount === 0 && !confirm('No hay ventas ni movimientos desde el último corte. ¿Guardar corte de todas formas?')) return;
 
             const diferencia = contado - resumen.efectivoEsperado;
+            const trabajador = getTrabajadorActual();
+            const ventasCorte = DB.ventas.filter(v => estaEnRangoCorte(v.fecha, resumen.desdeISO, resumen.hastaISO));
+            const movimientosCorte = DB.movimientos.filter(m => estaEnRangoCorte(m.fecha, resumen.desdeISO, resumen.hastaISO));
+            const corteId = Date.now();
             DB.cortes.push({
-                id: Date.now(),
+                id: corteId,
                 fecha: new Date().toISOString(),
                 desde: resumen.desdeISO,
                 hasta: resumen.hastaISO,
@@ -2473,8 +3034,13 @@
                 esperado: resumen.efectivoEsperado,
                 diferencia,
                 notas: byId('input-corte-notas')?.value.trim() || '',
-                resumen
+                resumen,
+                ventas: ventasCorte,
+                movimientos: movimientosCorte,
+                trabajadorId: trabajador.id,
+                trabajadorNombre: trabajador.nombre
             });
+            registrarAuditoria('corte', `Corte de caja guardado`, { monto: contado, ref: corteId, diferencia });
 
             if (input) input.value = '';
             if (byId('input-corte-notas')) byId('input-corte-notas').value = '';
@@ -2483,7 +3049,197 @@
             toast('Corte de caja guardado correctamente', 'fa-clipboard-check');
         }
 
+        function verDetalleCorte(id) {
+            const corte = (DB.cortes || []).find(c => String(c.id || c.fecha) === String(id));
+            if (!corte) return;
+            const resumen = corte.resumen || {};
+            const { ventas, movimientos } = obtenerDatosPeriodoCorte(corte);
+            const fecha = new Date(corte.hasta || corte.fecha);
+            const desde = corte.desde ? new Date(corte.desde) : null;
+            const diferencia = Number(corte.diferencia) || 0;
+
+            const ventasRows = ventas.length ? ventas.map(v => {
+                const f = new Date(v.fecha);
+                return `
+                    <tr>
+                        <td><span class="strong">#${esc(v.ticket)}</span><span class="text-[11px] text-slate-400 block">${f.toLocaleDateString('es-MX')} ${f.toLocaleTimeString('es-MX', { hour12: false })}</span></td>
+                        <td class="center"><span class="pill pill-blue">${esc(v.metodo)}</span></td>
+                        <td class="right mono strong">${money(v.total)}</td>
+                    </tr>
+                `;
+            }).join('') : `<tr><td colspan="3"><div class="empty-state min-h-[100px]"><div>Sin tickets en este corte.</div></div></td></tr>`;
+
+            const movimientosRows = movimientos.length ? movimientos.map(m => {
+                const f = new Date(m.fecha);
+                return `
+                    <tr>
+                        <td><span class="strong">${esc(m.concepto)}</span><span class="text-[11px] text-slate-400 block">${f.toLocaleDateString('es-MX')} ${f.toLocaleTimeString('es-MX', { hour12: false })}</span></td>
+                        <td class="center">${m.tipo === 'entrada' ? '<span class="pill pill-green">Entrada</span>' : '<span class="pill pill-red">Salida</span>'}</td>
+                        <td class="right mono strong ${m.tipo === 'entrada' ? 'ok' : 'danger'}">${money(m.monto)}</td>
+                    </tr>
+                `;
+            }).join('') : `<tr><td colspan="3"><div class="empty-state min-h-[100px]"><div>Sin movimientos en este corte.</div></div></td></tr>`;
+
+            byId('contenedor-detalle-corte').innerHTML = `
+                <div class="bg-white rounded-lg border border-slate-200 p-4 mb-4">
+                    <p class="font-black text-xl">Corte del ${fecha.toLocaleDateString('es-MX')} ${fecha.toLocaleTimeString('es-MX', { hour12: false })}</p>
+                    <p class="text-slate-500 text-sm mt-1">Periodo: ${desde ? `${desde.toLocaleDateString('es-MX')} ${desde.toLocaleTimeString('es-MX', { hour12: false })}` : 'Inicio'} a ${fecha.toLocaleDateString('es-MX')} ${fecha.toLocaleTimeString('es-MX', { hour12: false })}</p>
+                    ${corte.trabajadorNombre ? `<p class="text-slate-500 text-sm">Realizo: <span class="font-black text-slate-800">${esc(corte.trabajadorNombre)}</span></p>` : ''}
+                    ${corte.notas ? `<p class="text-slate-600 text-sm mt-2"><span class="font-black">Notas:</span> ${esc(corte.notas)}</p>` : ''}
+                </div>
+                <div class="detail-grid">
+                    <div class="detail-card is-main"><strong>Contado</strong><span>${money(corte.contado)}</span></div>
+                    <div class="detail-card"><strong>Esperado</strong><span>${money(corte.esperado ?? resumen.efectivoEsperado)}</span></div>
+                    <div class="detail-card"><strong>Diferencia</strong><span class="${Math.abs(diferencia) < 0.01 ? 'ok' : 'danger'}">${money(diferencia)}</span></div>
+                    <div class="detail-card"><strong>Ventas</strong><span>${money(resumen.totalVentas)}</span></div>
+                    <div class="detail-card"><strong>Efectivo</strong><span>${money(resumen.efectivo)}</span></div>
+                    <div class="detail-card"><strong>Tarjeta</strong><span>${money(resumen.tarjeta)}</span></div>
+                    <div class="detail-card"><strong>Transfer.</strong><span>${money(resumen.transferencia)}</span></div>
+                    <div class="detail-card"><strong>Credito</strong><span>${money(resumen.credito)}</span></div>
+                    <div class="detail-card"><strong>Entradas</strong><span>${money(resumen.entradas)}</span></div>
+                    <div class="detail-card"><strong>Salidas</strong><span>${money(resumen.salidas)}</span></div>
+                    <div class="detail-card"><strong>Tickets</strong><span>${ventas.length}</span></div>
+                    <div class="detail-card"><strong>Movs.</strong><span>${movimientos.length}</span></div>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <div class="bg-white rounded-lg border border-slate-200 overflow-auto">
+                        <div class="subpanel-head"><span><i class="fa-solid fa-receipt mr-2"></i>Tickets del corte</span></div>
+                        <table><thead><tr><th>Ticket</th><th class="center">Metodo</th><th class="right">Total</th></tr></thead><tbody>${ventasRows}</tbody></table>
+                    </div>
+                    <div class="bg-white rounded-lg border border-slate-200 overflow-auto">
+                        <div class="subpanel-head"><span><i class="fa-solid fa-money-bill-transfer mr-2"></i>Movimientos del corte</span></div>
+                        <table><thead><tr><th>Concepto</th><th class="center">Tipo</th><th class="right">Monto</th></tr></thead><tbody>${movimientosRows}</tbody></table>
+                    </div>
+                </div>
+            `;
+            openModal('modal-detalle-corte');
+        }
+
+        function cerrarDetalleCorte() { closeModal('modal-detalle-corte'); }
+
+        function obtenerActividadTrabajadores() {
+            const auditoria = Array.isArray(DB.auditoria) ? DB.auditoria : [];
+            const actividadBase = [
+                ...DB.ventas.map(v => ({
+                    id: `venta-${v.id}`,
+                    fecha: v.fecha,
+                    tipo: 'venta',
+                    detalle: `Ticket #${v.ticket}`,
+                    monto: Number(v.total) || 0,
+                    trabajadorId: v.trabajadorId || 'sin-trabajador',
+                    trabajadorNombre: v.trabajadorNombre || 'Sin trabajador',
+                    ref: v.ticket
+                })),
+                ...DB.movimientos.map(m => ({
+                    id: `mov-${m.id}`,
+                    fecha: m.fecha,
+                    tipo: 'movimiento',
+                    detalle: `${m.tipo}: ${m.concepto}`,
+                    monto: Number(m.monto) || 0,
+                    trabajadorId: m.trabajadorId || 'sin-trabajador',
+                    trabajadorNombre: m.trabajadorNombre || 'Sin trabajador',
+                    ref: m.tipo
+                })),
+                ...(DB.cortes || []).map(c => ({
+                    id: `corte-${c.id}`,
+                    fecha: c.fecha || c.hasta,
+                    tipo: 'corte',
+                    detalle: `Corte de caja`,
+                    monto: Number(c.contado) || 0,
+                    trabajadorId: c.trabajadorId || 'sin-trabajador',
+                    trabajadorNombre: c.trabajadorNombre || 'Sin trabajador',
+                    ref: c.id
+                }))
+            ];
+            const accionesExtra = auditoria.filter(a => !['venta', 'movimiento', 'corte'].includes(a.tipo));
+            return [...actividadBase, ...accionesExtra];
+        }
+
+        function abrirModalActividadTrabajadores() {
+            if (!exigirAdministrador('Solo Administrador puede ver la actividad de trabajadores.')) return;
+            renderActividadTrabajadores();
+            openModal('modal-actividad-trabajador');
+        }
+
+        function cerrarModalActividadTrabajadores() { closeModal('modal-actividad-trabajador'); }
+
+        function renderActividadTrabajadores(filtroTrabajador = '__todos') {
+            const cont = byId('contenedor-actividad-trabajadores');
+            if (!cont) return;
+
+            const actividad = obtenerActividadTrabajadores()
+                .filter(a => a.fecha)
+                .sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+            const trabajadores = [...new Map(actividad.map(a => [a.trabajadorId || a.trabajadorNombre, a.trabajadorNombre || 'Sin trabajador'])).entries()]
+                .map(([id, nombre]) => ({ id, nombre }));
+            const filtrada = filtroTrabajador === '__todos' ? actividad : actividad.filter(a => String(a.trabajadorId || a.trabajadorNombre) === filtroTrabajador);
+
+            const resumen = new Map();
+            actividad.forEach(a => {
+                const key = a.trabajadorId || a.trabajadorNombre || 'sin-trabajador';
+                if (!resumen.has(key)) resumen.set(key, { nombre: a.trabajadorNombre || 'Sin trabajador', ventas: 0, montoVentas: 0, movimientos: 0, cortes: 0, acciones: 0 });
+                const item = resumen.get(key);
+                item.acciones++;
+                if (a.tipo === 'venta') { item.ventas++; item.montoVentas += Number(a.monto) || 0; }
+                if (a.tipo === 'movimiento') item.movimientos++;
+                if (a.tipo === 'corte') item.cortes++;
+            });
+
+            const resumenCards = [...resumen.values()].map(r => `
+                <div class="detail-card">
+                    <strong>${esc(r.nombre)}</strong>
+                    <span>${money(r.montoVentas)}</span>
+                    <div class="text-[11px] text-slate-500 mt-2 font-bold">${r.ventas} ventas / ${r.movimientos} movs. / ${r.cortes} cortes / ${r.acciones} acciones</div>
+                </div>
+            `).join('') || `<div class="empty-state"><div>Sin actividad registrada.</div></div>`;
+
+            const rows = filtrada.slice(0, 160).map(a => {
+                const f = new Date(a.fecha);
+                const tipoLabel = {
+                    venta: 'Venta',
+                    movimiento: 'Movimiento',
+                    corte: 'Corte',
+                    eliminar_ticket: 'Elimino ticket',
+                    producto: 'Producto',
+                    cliente: 'Cliente',
+                    abono: 'Abono'
+                }[a.tipo] || a.tipo;
+                return `
+                    <tr>
+                        <td><span class="strong">${esc(a.trabajadorNombre || 'Sin trabajador')}</span><span class="text-[11px] text-slate-400 block">${f.toLocaleDateString('es-MX')} ${f.toLocaleTimeString('es-MX', { hour12: false })}</span></td>
+                        <td class="center"><span class="pill pill-blue">${esc(tipoLabel)}</span></td>
+                        <td>${esc(a.detalle || '')}</td>
+                        <td class="right mono strong">${a.monto !== undefined ? money(a.monto) : '-'}</td>
+                    </tr>
+                `;
+            }).join('') || `<tr><td colspan="4"><div class="empty-state"><div>No hay actividad para este filtro.</div></div></td></tr>`;
+
+            cont.innerHTML = `
+                <div class="bg-white rounded-lg border border-slate-200 p-4 mb-4">
+                    <div class="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
+                        <div>
+                            <p class="font-black text-xl">Registro de actividad</p>
+                            <p class="text-slate-500 text-sm mt-1">Ventas, movimientos, cortes y acciones sensibles por trabajador.</p>
+                        </div>
+                        <select class="select-field font-black max-w-[260px]" onchange="renderActividadTrabajadores(this.value)">
+                            <option value="__todos"${filtroTrabajador === '__todos' ? ' selected' : ''}>Todos los trabajadores</option>
+                            ${trabajadores.map(t => `<option value="${esc(t.id)}"${filtroTrabajador === t.id ? ' selected' : ''}>${esc(t.nombre)}</option>`).join('')}
+                        </select>
+                    </div>
+                </div>
+                <div class="detail-grid">${resumenCards}</div>
+                <div class="bg-white rounded-lg border border-slate-200 overflow-auto">
+                    <table>
+                        <thead><tr><th>Trabajador / Fecha</th><th class="center">Tipo</th><th>Detalle</th><th class="right">Monto</th></tr></thead>
+                        <tbody>${rows}</tbody>
+                    </table>
+                </div>
+            `;
+        }
+
         function renderCaja() {
+            renderResumenPagosCaja();
+            const puedeBorrarTickets = esAdministrador();
             const ventasTbody = byId('historial-ventas-tbody');
             if (ventasTbody) {
                 const ultimasVentas = [...DB.ventas].reverse().slice(0, 50);
@@ -2493,12 +3249,13 @@
                     const f = new Date(v.fecha);
                     return `
                         <tr>
-                            <td><span class="strong">#${esc(v.ticket)}</span><span class="text-[11px] text-slate-400 block">${f.toLocaleDateString('es-MX')} ${f.toLocaleTimeString('es-MX', { hour12: false })}</span></td>
+                            <td><span class="strong">#${esc(v.ticket)}</span><span class="text-[11px] text-slate-400 block">${f.toLocaleDateString('es-MX')} ${f.toLocaleTimeString('es-MX', { hour12: false })}</span>${v.trabajadorNombre ? `<span class="text-[11px] text-slate-400 block">Atendio: ${esc(v.trabajadorNombre)}</span>` : ''}</td>
                             <td class="center"><span class="pill pill-blue">${esc(v.metodo)}</span></td>
                             <td class="right mono strong">${money(v.total)}</td>
                             <td class="center">
                                 <button onclick="verDetalleVenta(${v.id})" class="btn btn-soft btn-icon" type="button" title="Ver Detalles"><i class="fa-solid fa-eye text-indigo-600"></i></button>
-                                <button onclick="borrarVentaConPin(${v.id})" class="btn btn-red btn-icon ml-1" type="button" title="Eliminar Venta"><i class="fa-solid fa-trash"></i></button>
+                                <button onclick="enviarTicketVentaWA(${v.id})" class="btn btn-soft btn-icon ml-1" type="button" title="Enviar por WhatsApp"><i class="fa-brands fa-whatsapp text-green-600"></i></button>
+                                ${puedeBorrarTickets ? `<button onclick="borrarVentaConPin(${v.id})" class="btn btn-red btn-icon ml-1" type="button" title="Eliminar Venta"><i class="fa-solid fa-trash"></i></button>` : ''}
                             </td>
                         </tr>
                     `;
@@ -2513,7 +3270,7 @@
                     const f = new Date(m.fecha);
                     return `
                         <tr>
-                            <td><span class="strong block">${esc(m.concepto)}</span><span class="text-[11px] text-slate-400">${f.toLocaleDateString('es-MX')} ${f.toLocaleTimeString('es-MX', { hour12: false })}</span></td>
+                            <td><span class="strong block">${esc(m.concepto)}</span><span class="text-[11px] text-slate-400">${f.toLocaleDateString('es-MX')} ${f.toLocaleTimeString('es-MX', { hour12: false })}</span>${m.trabajadorNombre ? `<span class="text-[11px] text-slate-400 block">Atendio: ${esc(m.trabajadorNombre)}</span>` : ''}</td>
                             <td class="center">${m.tipo === 'entrada' ? '<span class="pill pill-green"><i class="fa-solid fa-arrow-down"></i> IN</span>' : '<span class="pill pill-red"><i class="fa-solid fa-arrow-up"></i> OUT</span>'}</td>
                             <td class="right mono strong ${m.tipo === 'entrada' ? 'ok' : 'danger'}">${money(m.monto)}</td>
                         </tr>
@@ -2546,6 +3303,8 @@
                     <p class="font-black text-xl">Ticket #${esc(v.ticket)}</p>
                     <p class="text-slate-500 text-sm mt-1">Fecha: ${f.toLocaleDateString('es-MX')} ${f.toLocaleTimeString('es-MX')}</p>
                     <p class="text-slate-500 text-sm">Cobro: <span class="font-black text-slate-800">${esc(v.metodo)}</span></p>
+                    ${v.trabajadorNombre ? `<p class="text-slate-500 text-sm">Atendio: <span class="font-black text-slate-800">${esc(v.trabajadorNombre)}</span></p>` : ''}
+                    ${v.clienteNombre ? `<p class="text-slate-500 text-sm">Cliente: <span class="font-black text-slate-800">${esc(v.clienteNombre)}</span></p>` : ''}
                 </div>
                 <div class="overflow-auto bg-white rounded-lg border border-slate-200">
                     <table class="min-w-[340px]">
@@ -2557,6 +3316,7 @@
                     <div class="flex justify-between items-center"><span class="text-slate-500 font-black uppercase text-xs tracking-wider">Gran Total</span><span class="text-2xl font-black text-blue-600 mono">${money(v.total)}</span></div>
                     <div class="flex justify-between items-center text-sm"><span class="font-black">Pago Recibido</span><span class="mono">${money(recibido)}</span></div>
                     <div class="flex justify-between items-center bg-green-50 border border-green-200 rounded-lg px-3 py-2"><span class="font-black text-green-800">Cambio Devuelto</span><span class="mono font-black text-green-700 text-lg">${money(cambio)}</span></div>
+                    <button onclick="enviarTicketVentaWA(${v.id})" class="btn btn-green min-h-[44px] mt-2" type="button"><i class="fa-brands fa-whatsapp"></i> Enviar ticket por WhatsApp</button>
                 </div>
             `;
             openModal('modal-detalle-venta');
@@ -2564,8 +3324,10 @@
         function cerrarDetalleVenta() { closeModal('modal-detalle-venta'); }
 
         function borrarVentaConPin(id) {
+            if (!exigirAdministrador('Solo un Administrador puede borrar tickets.')) return;
             const pin = prompt('ESTRICTA SEGURIDAD\nIngrese el PIN de Administrador para borrar este ticket:\n(Pista: 1234)');
-            if (pin !== '1234') {
+            if (pin === null) return;
+            if (!validarPinAdmin(pin)) {
                 if (pin !== null) alert('PIN Incorrecto. Operación cancelada.');
                 return;
             }
@@ -2590,6 +3352,7 @@
             }
 
             DB.ventas.splice(ventaIndex, 1);
+            registrarAuditoria('eliminar_ticket', `Ticket #${venta.ticket} eliminado`, { monto: venta.total, ref: venta.ticket });
             guardarDB();
             renderCaja();
             renderProductosFrecuentes();
@@ -2731,8 +3494,10 @@
             if (productoEditandoId) {
                 const index = DB.productos.findIndex(p => p.id === productoEditandoId);
                 if (index !== -1) DB.productos[index] = datos;
+                registrarAuditoria('producto', `Producto editado: ${datos.desc}`, { ref: datos.id });
             } else {
                 DB.productos.push(datos);
+                registrarAuditoria('producto', `Producto creado: ${datos.desc}`, { ref: datos.id });
             }
             guardarDB();
             renderProductos();
@@ -2742,7 +3507,9 @@
 
         function borrarProducto(id) {
             if (confirm('¿Eliminar este producto?')) {
+                const producto = DB.productos.find(p => p.id === id);
                 DB.productos = DB.productos.filter(p => p.id !== id);
+                registrarAuditoria('producto', `Producto eliminado: ${producto?.desc || id}`, { ref: id });
                 guardarDB();
                 renderProductos();
                 renderProductosFrecuentes();
@@ -2751,7 +3518,9 @@
 
         function borrarInventarioTotal() {
             if (confirm('PELIGRO EXTREMO\n\n¿Estás ABSOLUTAMENTE SEGURO de querer borrar TODO el inventario?\n\nEsta acción eliminará todos tus productos y NO se puede deshacer.')) {
+                const totalProductos = DB.productos.length;
                 DB.productos = [];
+                registrarAuditoria('producto', `Inventario completo borrado (${totalProductos} productos)`, { monto: totalProductos });
                 guardarDB();
                 renderProductos();
                 renderProductosFrecuentes();
@@ -2817,6 +3586,7 @@
                     else DB.productos.push(nuevoProd);
                     importados++;
                 }
+                registrarAuditoria('producto', `CSV importado (${importados} productos)`, { monto: importados });
                 guardarDB();
                 renderProductos();
                 renderProductosFrecuentes();
@@ -2942,8 +3712,10 @@
                 DB.clientes[index].telefono = telefono;
                 DB.clientes[index].direccion = direccion;
                 DB.clientes[index].limiteCredito = limiteCredito;
+                registrarAuditoria('cliente', `Cliente editado: ${nombre}`, { ref: id });
             } else {
                 DB.clientes.push({ id, nombre, telefono, direccion, limiteCredito, deuda: 0, historial: [] });
+                registrarAuditoria('cliente', `Cliente creado: ${nombre}`, { ref: id });
             }
             guardarDB();
             renderClientes();
@@ -2952,7 +3724,9 @@
 
         function borrarCliente(id) {
             if (confirm('¿Estás seguro de eliminar este cliente? Se borrará su historial de deudas.')) {
+                const cliente = DB.clientes.find(c => c.id === id);
                 DB.clientes = DB.clientes.filter(c => c.id !== id);
+                registrarAuditoria('cliente', `Cliente eliminado: ${cliente?.nombre || id}`, { ref: id });
                 guardarDB();
                 renderClientes();
             }
@@ -3002,7 +3776,9 @@
             c.deuda = (Number(c.deuda) || 0) - monto;
             if (!c.historial) c.historial = [];
             c.historial.push({ id: Date.now(), fecha: new Date().toISOString(), tipo: 'abono', total: monto });
-            DB.movimientos.push({ id: Date.now(), fecha: new Date().toISOString(), tipo: 'entrada', monto, concepto: `Abono de cliente: ${c.nombre}` });
+            const trabajador = getTrabajadorActual();
+            DB.movimientos.push({ id: Date.now(), fecha: new Date().toISOString(), tipo: 'entrada', monto, concepto: `Abono de cliente: ${c.nombre}`, trabajadorId: trabajador.id, trabajadorNombre: trabajador.nombre });
+            registrarAuditoria('abono', `Abono de cliente: ${c.nombre}`, { monto, ref: c.id });
             guardarDB();
             renderClientes();
             byId('abonar-deuda-actual').innerText = money(c.deuda);
@@ -3013,51 +3789,93 @@
 
         function limpiarTelefono(tel) { return String(tel || '').replace(/\D/g, ''); }
 
+        function numeroWhatsAppMX(tel) {
+            const limpio = limpiarTelefono(tel);
+            if (!limpio) return '';
+            return limpio.startsWith('52') && limpio.length > 10 ? limpio : `52${limpio}`;
+        }
+
+        function getTelefonoVenta(venta) {
+            if (venta.clienteTelefono) return venta.clienteTelefono;
+            const cliente = DB.clientes.find(c => c.historial?.some(h => String(h.ticket) === String(venta.ticket)));
+            return cliente?.telefono || '';
+        }
+
+        function crearMensajeTicketVenta(venta) {
+            const f = new Date(venta.fecha);
+            let msg = `Abarrotes Betty\nTicket #${venta.ticket}\n`;
+            msg += `Fecha: ${f.toLocaleDateString('es-MX')} ${f.toLocaleTimeString('es-MX', { hour12: false })}\n`;
+            if (venta.trabajadorNombre) msg += `Atendio: ${venta.trabajadorNombre}\n`;
+            if (venta.clienteNombre) msg += `Cliente: ${venta.clienteNombre}\n`;
+            msg += `Pago: ${venta.metodo || 'N/A'}\n\n`;
+            msg += `Articulos:\n`;
+            (venta.articulos || []).forEach(item => {
+                const cantidad = Number(item.cantidad) || 0;
+                const importe = (Number(item.precio) || 0) * cantidad;
+                msg += `- ${cantidad} x ${item.desc}: ${money(importe)}\n`;
+            });
+            msg += `\nTotal: ${money(venta.total)}\n`;
+            if (String(venta.metodo || '').toLowerCase() !== 'credito') {
+                msg += `Recibido: ${money(venta.recibido ?? venta.total)}\n`;
+                msg += `Cambio: ${money(venta.cambio || 0)}\n`;
+            }
+            msg += `\nGracias por tu compra.`;
+            return msg;
+        }
+
+        function enviarTicketVentaWA(id) {
+            const venta = DB.ventas.find(v => v.id === id);
+            if (!venta) return;
+            const telefonoGuardado = getTelefonoVenta(venta);
+            const telefono = telefonoGuardado || prompt('Numero de WhatsApp para enviar este ticket:');
+            const numero = numeroWhatsAppMX(telefono);
+            if (!numero) return;
+            window.open(`https://wa.me/${numero}?text=${encodeURIComponent(crearMensajeTicketVenta(venta))}`, '_blank');
+        }
+
         function enviarTicketWA(cliente, total, carrito, ticketNum) {
             if (!cliente.telefono) return;
             let msg = `Abarrotes Betty\nTicket #${ticketNum}\n\n`;
             carrito.forEach(item => { msg += `${item.cantidad}x ${item.desc} - ${money((Number(item.precio) || 0) * (Number(item.cantidad) || 0))}\n`; });
             msg += `\nTotal de la Compra: ${money(total)}\nMétodo: A Crédito\nDeuda Total Actualizada: ${money(cliente.deuda)}\n\n¡Gracias por tu preferencia!`;
-            window.open(`https://wa.me/52${limpiarTelefono(cliente.telefono)}?text=${encodeURIComponent(msg)}`, '_blank');
+            window.open(`https://wa.me/${numeroWhatsAppMX(cliente.telefono)}?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
         function enviarReciboAbonoWA(cliente, montoAbono) {
             if (!cliente.telefono) return alert('Abono registrado. (El cliente no tiene teléfono para mandar WhatsApp)');
             let msg = `Recibo de Abono - Abarrotes Betty\n\nHola ${cliente.nombre}, hemos registrado tu abono exitosamente.\n\n`;
             msg += `Monto Abonado: ${money(montoAbono)}\nSaldo Pendiente: ${money(cliente.deuda)}\n\n¡Gracias por tu pago!`;
-            window.open(`https://wa.me/52${limpiarTelefono(cliente.telefono)}?text=${encodeURIComponent(msg)}`, '_blank');
+            window.open(`https://wa.me/${numeroWhatsAppMX(cliente.telefono)}?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
         function enviarRecordatorioWA() {
             const id = byId('abonar-cliente-id').value;
             const c = DB.clientes.find(x => x.id === id);
             if (!c || !c.telefono) return alert('El cliente no tiene teléfono registrado.');
-            let msg = `Hola ${c.nombre},\nTe contactamos de Abarrotes Betty para enviarte tu estado de cuenta. Tu saldo pendiente actual es de ${money(c.deuda)}.\n\n`;
-            if (c.historial?.length) {
-                const compras = c.historial.filter(h => h.tipo === 'compra');
-                const abonos = c.historial.filter(h => h.tipo === 'abono');
-                if (compras.length) {
-                    msg += `DETALLE DE COMPRAS FIADAS:\n`;
-                    compras.forEach(compra => {
-                        const f = new Date(compra.fecha);
-                        msg += `${f.toLocaleDateString('es-MX')} (Ticket #${compra.ticket})\n`;
-                        (compra.articulos || []).forEach(art => {
-                            msg += `  ${art.cantidad}x ${art.desc} = ${money((Number(art.precio) || 0) * (Number(art.cantidad) || 0))}\n`;
-                        });
-                        msg += `  Total de compra: ${money(compra.total)}\n\n`;
-                    });
-                }
-                if (abonos.length) {
-                    msg += `TUS ABONOS REGISTRADOS:\n`;
-                    abonos.forEach(abono => {
-                        const f = new Date(abono.fecha);
-                        msg += `${f.toLocaleDateString('es-MX')} - Abonaste: ${money(abono.total)}\n`;
-                    });
-                    msg += `\n`;
-                }
+            const historial = c.historial || [];
+            const compras = historial.filter(h => h.tipo === 'compra');
+            const abonos = historial.filter(h => h.tipo === 'abono');
+            const totalCompras = compras.reduce((sum, h) => sum + (Number(h.total) || 0), 0);
+            const totalAbonos = abonos.reduce((sum, h) => sum + (Number(h.total) || 0), 0);
+            const ultimos = [...historial].slice(-5).reverse();
+
+            let msg = `Hola ${c.nombre}, te contactamos de Abarrotes Betty.\n\n`;
+            msg += `Saldo pendiente: ${money(c.deuda)}\n`;
+            msg += `Compras fiadas: ${compras.length} ticket(s) por ${money(totalCompras)}\n`;
+            msg += `Abonos registrados: ${abonos.length} pago(s) por ${money(totalAbonos)}\n`;
+            if (clienteTieneLimite(c)) msg += `Limite de credito: ${money(getLimiteCredito(c))}\n`;
+
+            if (ultimos.length) {
+                msg += `\nUltimos movimientos:\n`;
+                ultimos.forEach(mov => {
+                    const f = new Date(mov.fecha);
+                    if (mov.tipo === 'compra') msg += `- ${f.toLocaleDateString('es-MX')} Ticket #${mov.ticket}: ${money(mov.total)}\n`;
+                    if (mov.tipo === 'abono') msg += `- ${f.toLocaleDateString('es-MX')} Abono: ${money(mov.total)}\n`;
+                });
             }
-            msg += `Por favor pasa a liquidar tu cuenta cuando te sea posible. ¡Agradecemos tu preferencia!`;
-            window.open(`https://wa.me/52${limpiarTelefono(c.telefono)}?text=${encodeURIComponent(msg)}`, '_blank');
+
+            msg += `\nGracias por tu preferencia.`;
+            window.open(`https://wa.me/${numeroWhatsAppMX(c.telefono)}?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
         function openModal(id) {
@@ -3076,6 +3894,7 @@
         }
 
         cargarDB();
+        actualizarTrabajadorStatus();
         actualizarInterfazVentas();
         renderProductosFrecuentes();
         setTimeout(() => byId('barcodeInput')?.focus(), 100);
@@ -3104,7 +3923,39 @@
         const db = getFirestore(app);
         const DB_LOCAL_KEY_MODULE = 'DB_Abarrotes_Betty';
         const DB_UPDATED_KEY_MODULE = 'DB_Abarrotes_Betty_UpdatedAt';
-        const BETTY_EMAIL = 'betty@admin.com';
+        const CLOUD_DEFAULT_USER = 'usuario1';
+        const CLOUD_DEFAULT_PASSWORD = '1234';
+        const CLOUD_DOMAIN = 'abarrotesbetty.app';
+        const LEGACY_BETTY_EMAIL = 'betty@admin.com';
+
+        function cleanCloudUser(value) {
+            return String(value || CLOUD_DEFAULT_USER).trim().toLowerCase();
+        }
+
+        function cloudUserToEmail(user) {
+            const clean = cleanCloudUser(user);
+            if (clean.includes('@')) return clean;
+            return `${clean.replace(/[^a-z0-9._-]/g, '') || CLOUD_DEFAULT_USER}@${CLOUD_DOMAIN}`;
+        }
+
+        function cloudPasswordToFirebasePassword(user, password) {
+            const cleanPass = String(password || '');
+            if (cleanCloudUser(user).includes('@') && cleanPass.length >= 6) return cleanPass;
+            return `Betty-${cleanCloudUser(user).replace(/[^a-z0-9]/g, '') || CLOUD_DEFAULT_USER}-${cleanPass || CLOUD_DEFAULT_PASSWORD}`;
+        }
+
+        function firebaseEmailToCloudUser(email) {
+            const clean = cleanCloudUser(email);
+            if (clean.endsWith(`@${CLOUD_DOMAIN}`)) return clean.replace(`@${CLOUD_DOMAIN}`, '');
+            if (clean === LEGACY_BETTY_EMAIL) return 'betty';
+            return clean || CLOUD_DEFAULT_USER;
+        }
+
+        function isAllowedCloudUser(user) {
+            if (isCanvas) return true;
+            const email = cleanCloudUser(user?.email);
+            return email.endsWith(`@${CLOUD_DOMAIN}`);
+        }
 
         function getStoreDocRef(user) {
             return isCanvas
@@ -3128,8 +3979,24 @@
 
         function countRecords(dbState) {
             if (!dbState || typeof dbState !== 'object') return 0;
+            return ['productos', 'clientes', 'ventas', 'movimientos', 'cortes', 'trabajadores', 'auditoria']
+                .reduce((sum, key) => sum + (Array.isArray(dbState[key]) ? dbState[key].length : 0), 0);
+        }
+
+        function countBusinessRecords(dbState) {
+            if (!dbState || typeof dbState !== 'object') return 0;
             return ['productos', 'clientes', 'ventas', 'movimientos', 'cortes']
                 .reduce((sum, key) => sum + (Array.isArray(dbState[key]) ? dbState[key].length : 0), 0);
+        }
+
+        function shouldUploadLocalOverCloud(localBackup, cloudData, cloudUpdatedAt) {
+            if (!localBackup?.data) return false;
+            const localBusiness = countBusinessRecords(localBackup.data);
+            const cloudBusiness = countBusinessRecords(cloudData);
+            if (localBusiness === 0) return false;
+            if (cloudBusiness === 0) return true;
+            if (localBusiness > cloudBusiness && isNewer(localBackup.updatedAt, cloudUpdatedAt)) return true;
+            return false;
         }
 
         function isNewer(a, b) {
@@ -3148,7 +4015,8 @@
             const emailInput = document.getElementById('firebase-login-email');
             const passInput = document.getElementById('firebase-login-password');
             const errorEl = document.getElementById('firebase-login-error');
-            if (emailInput && !emailInput.value) emailInput.value = BETTY_EMAIL;
+            document.getElementById('modal-trabajador')?.classList.remove('flex');
+            if (emailInput && !emailInput.value) emailInput.value = CLOUD_DEFAULT_USER;
             if (errorEl) {
                 errorEl.textContent = message;
                 errorEl.classList.toggle('hidden', !message);
@@ -3161,6 +4029,10 @@
         function hideFirebaseLogin() {
             document.getElementById('modal-login-firebase')?.classList.remove('flex');
             document.getElementById('firebase-login-error')?.classList.add('hidden');
+            setTimeout(() => {
+                const state = window.BettyAppState || (typeof AppState !== 'undefined' ? AppState : null);
+                if (state && !state.trabajadorActual && typeof abrirModalTrabajador === 'function' && !document.querySelector('.modal.flex')) abrirModalTrabajador();
+            }, 120);
         }
 
         function authMessage(error) {
@@ -3174,13 +4046,15 @@
         }
 
         window.iniciarSesionBetty = async function() {
-            const email = document.getElementById('firebase-login-email')?.value.trim() || BETTY_EMAIL;
+            const usuario = document.getElementById('firebase-login-email')?.value.trim() || CLOUD_DEFAULT_USER;
             const password = document.getElementById('firebase-login-password')?.value || '';
+            const email = cloudUserToEmail(usuario);
+            const firebasePassword = cloudPasswordToFirebasePassword(usuario, password);
             const btn = document.getElementById('btn-login-firebase');
             const errorEl = document.getElementById('firebase-login-error');
 
             if (!password) {
-                showFirebaseLogin('Escribe la contraseña de Betty.');
+                showFirebaseLogin('Escribe la contraseña.');
                 return;
             }
 
@@ -3191,13 +4065,13 @@
                 }
                 if (errorEl) errorEl.classList.add('hidden');
                 setCloudStatus(`<i class="fa-solid fa-cloud-arrow-up text-amber-400 fa-bounce"></i><span>Entrando...</span>`);
-                await signInWithEmailAndPassword(auth, email, password);
+                await signInWithEmailAndPassword(auth, email, firebasePassword);
             } catch (error) {
-                const canCreateBettyUser = email.toLowerCase() === BETTY_EMAIL && ['auth/user-not-found', 'auth/invalid-credential'].includes(error?.code);
+                const canCreateBettyUser = !cleanCloudUser(usuario).includes('@') && ['auth/user-not-found', 'auth/invalid-credential'].includes(error?.code);
                 if (canCreateBettyUser) {
                     try {
                         setCloudStatus(`<i class="fa-solid fa-user-plus text-amber-400 fa-bounce"></i><span>Creando usuario...</span>`);
-                        await createUserWithEmailAndPassword(auth, email, password);
+                        await createUserWithEmailAndPassword(auth, email, firebasePassword);
                     } catch (createError) {
                         console.error('Error creando usuario Betty:', createError);
                         showFirebaseLogin(authMessage(createError));
@@ -3222,13 +4096,13 @@
 
                 onAuthStateChanged(auth, async (user) => {
                     if (user) {
-                        if (!isCanvas && user.email !== BETTY_EMAIL) {
+                        if (!isAllowedCloudUser(user)) {
                             await signOut(auth);
-                            showFirebaseLogin('Inicia sesión con betty@admin.com para usar la nube de la tienda.');
+                            showFirebaseLogin('Inicia sesión con usuario1 para usar la nube de la tienda.');
                             return;
                         }
                         hideFirebaseLogin();
-                        setCloudStatus(`<i class="fa-solid fa-cloud text-emerald-400"></i><span>${user.email || 'Nube Activa'}</span>`);
+                        setCloudStatus(`<i class="fa-solid fa-cloud text-emerald-400"></i><span>${firebaseEmailToCloudUser(user.email) || 'Nube Activa'}</span>`);
                         await window.cargarDeNube(user);
                     } else {
                         showFirebaseLogin();
@@ -3278,14 +4152,13 @@
                     const payload = docSnap.data();
                     const cloudData = JSON.parse(payload.data);
                     const cloudUpdatedAt = payload.updatedAt || null;
-                    const localHasMoreData = localBackup && countRecords(localBackup.data) > countRecords(cloudData);
 
-                    if (localBackup && (isNewer(localBackup.updatedAt, cloudUpdatedAt) || (!cloudUpdatedAt && localHasMoreData))) {
+                    if (shouldUploadLocalOverCloud(localBackup, cloudData, cloudUpdatedAt)) {
                         await window.guardarEnNube(localBackup.data, localBackup.updatedAt || new Date().toISOString());
                     } else if (window.actualizarDesdeNube) {
                         window.actualizarDesdeNube(cloudData, { updatedAt: cloudUpdatedAt || new Date().toISOString() });
                     }
-                } else if (localBackup) {
+                } else if (localBackup && countBusinessRecords(localBackup.data) > 0) {
                     await window.guardarEnNube(localBackup.data, localBackup.updatedAt || new Date().toISOString());
                 }
             } catch(e) {
